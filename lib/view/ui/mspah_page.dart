@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../style/app_colors.dart';
+import '../widgets/default_appbar.dart';
 
 class MspahPage extends StatelessWidget {
   const MspahPage({super.key});
@@ -17,25 +18,12 @@ class MspahPage extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          title: Text(
-            'سراج',
-            style: TextStyle(
-              // fontSize: 30,
-              fontSize: 30.sp,
-              fontWeight: FontWeight.w400,
-              color: DawnColors.textColor,
-              letterSpacing: 0,
-              height: 1.0,
-            ),
-          ),
-          centerTitle: true,
-        ),
         body: SingleChildScrollView(
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              DefaultAppbar(title: 'سراج'),
               Padding(
                 padding: EdgeInsets.only(top: 15.r, right: 15.r),
                 child: Stack(

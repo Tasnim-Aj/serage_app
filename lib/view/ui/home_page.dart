@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:serag_app/view/ui/gelsat_dhakr_page.dart';
+import 'package:serag_app/view/ui/mspah_page.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 
 import '../style/app_colors.dart';
@@ -33,10 +35,10 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: [
                   Stack(
+                    clipBehavior: Clip.none,
                     children: [
                       Container(
                         margin: EdgeInsets.only(top: 144.r),
-                        padding: EdgeInsets.only(left: 14.r, right: 11.r),
                         alignment: Alignment.center,
                         width: 309.w,
                         height: 151.h,
@@ -56,20 +58,23 @@ class _HomePageState extends State<HomePage> {
                             letterSpacing: 0,
                             height: 1.0,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       Positioned(
-                        top: 110,
+                        top: 110.r,
+                        left: 272.r,
                         child: Container(
-                          alignment: Alignment.center,
                           width: 68.w,
                           height: 68.h,
                           decoration: BoxDecoration(
-                              image: DecorationImage(
-                            image: AssetImage(
-                              'assets/icons/star5.png',
+                            image: DecorationImage(
+                              image: AssetImage(
+                                'assets/icons/star5.png',
+                              ),
                             ),
-                          )),
+                          ),
+                          alignment: Alignment.center,
                           child: Text(
                             'ملاحظة',
                             style: TextStyle(
@@ -138,11 +143,19 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.only(top: 456.r, left: 15.r),
                   child: Column(
                     children: [
-                      _buildMainButton(
-                          'جلسة ذكر', 'assets/icons/meeting.png', () {}),
+                      _buildMainButton('جلسة ذكر', 'assets/icons/meeting.png',
+                          () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                GradientBackground(child: GelsatDhakrPage())));
+                      }),
                       SizedBox(height: 14.95.h),
                       _buildMainButton(
-                          'مسابقة بذِكر', 'assets/icons/counter.png', () {}),
+                          'مسابقة بذِكر', 'assets/icons/counter.png', () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                GradientBackground(child: MspahPage())));
+                      }),
                     ],
                   ),
                 ),

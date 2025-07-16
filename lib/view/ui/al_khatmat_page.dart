@@ -344,7 +344,7 @@ class _AlKhatmatPageState extends State<AlKhatmatPage> {
                                             child: InkWell(
                                               onTap: _shareEntries,
                                               child: Container(
-                                                alignment: Alignment.center,
+                                                // alignment: Alignment.center,
                                                 width: 123.w,
                                                 height: 29.h,
                                                 decoration: BoxDecoration(
@@ -352,15 +352,29 @@ class _AlKhatmatPageState extends State<AlKhatmatPage> {
                                                         BorderRadius.circular(
                                                             5),
                                                     color: Color(0xFF7D6358)),
-                                                child: Text(
-                                                  'مشاركة',
-                                                  style: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 15.sp,
-                                                    color: Colors.white,
-                                                    letterSpacing: 0.0,
-                                                    height: 1.0,
-                                                  ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Image.asset(
+                                                        'assets/icons/sparkling.png'),
+                                                    Text(
+                                                      'مشاركة',
+                                                      style: GoogleFonts.inter(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 15.sp,
+                                                        color: Colors.white,
+                                                        letterSpacing: 0.0,
+                                                        height: 1.0,
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      Icons.share,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                             ),

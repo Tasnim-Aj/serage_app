@@ -132,8 +132,10 @@ class _HomePageState extends State<HomePage> {
                       _buildMainButton('ختمة عامة', 'assets/icons/group41.png',
                           () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                GradientBackground(child: AlKhatmatPage())));
+                            builder: (context) => GradientBackground(
+                                    child: AlKhatmatPage(
+                                  initialPersons: 1,
+                                ))));
                       }),
                     ],
                   ),

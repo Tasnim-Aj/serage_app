@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 
-import 'app_colors.dart';
-
-ThemeData dawnTheme = ThemeData(
-  colorScheme: ColorScheme.light(
-    primary: DawnColors.primary,
-    background: Colors.transparent,
-  ),
-  scaffoldBackgroundColor: Colors.transparent,
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      textStyle: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-        color: DawnColors.textColor,
-      ),
-      backgroundColor: DawnColors.primary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.black),
-      ),
+class AppThemes {
+  static final ThemeData lightTheme = ThemeData(
+    primaryColor: Colors.blue,
+    colorScheme: ColorScheme.light(
+      primary: Colors.blue,
+      secondary: Colors.green,
     ),
-  ),
-);
+    scaffoldBackgroundColor: Colors.white,
+    appBarTheme: AppBarTheme(
+      color: Colors.blue,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
+  );
+
+  static final ThemeData darkTheme = ThemeData(
+    primaryColor: Colors.indigo,
+    colorScheme: ColorScheme.dark(
+      primary: Colors.indigo,
+      secondary: Colors.purple,
+    ),
+    scaffoldBackgroundColor: Colors.grey[900],
+    appBarTheme: AppBarTheme(
+      color: Colors.indigo,
+      iconTheme: IconThemeData(color: Colors.white),
+    ),
+  );
+}

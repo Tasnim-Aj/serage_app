@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:serag_app/bloc/khatma/khatma_bloc.dart';
+import 'package:serag_app/cubit/theme_cubit.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
+import 'config/config.dart';
 import 'view/style/gradient_background.dart';
 import 'view/ui/home_page.dart';
 
 void main() async {
+  Bloc.observer = MyBlocObserver();
+
   WidgetsFlutterBinding.ensureInitialized();
   await GoogleFonts.pendingFonts([GoogleFonts.inter()]);
+  await dotenv.load(fileName: '.env');
+
+  final supabaseUrl = dotenv.env['SUPABASE_URL'];
+  final supabaseKey = dotenv.env['SUPABASE_KEY'];
+  if (supabaseUrl == null || supabaseKey == null) {
+    throw Exception('Supabase URL or Key not found in .env file');
+  }
+
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
 
   runApp(const MyApp());
 }
@@ -20,25 +35,35 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: Size(360, 800),
+      designSize: const Size(360, 800),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, _) {
         return MultiBlocProvider(
           providers: [
+            // BlocProvider(
+            //   create: (context) => KhatmatKhasaBloc(Supabase.instance.client),
+            // ),
+
             BlocProvider(
-              create: (context) => KhatmatKhasaBloc(),
-            )
-          ],
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            locale: Locale('ar', ''),
-            home: GradientBackground(
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: HomePage(),
-              ),
+              create: (context) =>
+                  KhatmaBloc(Supabase.instance.client)..add(LoadKhatmasEvent()),
             ),
+          ],
+          child: BlocBuilder<ThemeCubit, ThemeData>(
+            builder: (context, theme) {
+              return MaterialApp(
+                theme: theme,
+                debugShowCheckedModeBanner: false,
+                locale: const Locale('ar', ''),
+                home: GradientBackground(
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: HomePage(),
+                  ),
+                ),
+              );
+            },
           ),
         );
       },

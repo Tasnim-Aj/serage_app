@@ -10,8 +10,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../bloc/khatma/khatma_bloc.dart';
 import '../style/app_colors.dart';
 
-class KhatmaKhasaPage extends StatelessWidget {
-  const KhatmaKhasaPage({super.key});
+class CreateKhatmaPage extends StatelessWidget {
+  const CreateKhatmaPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +114,7 @@ class _KhatmaKhasaView extends StatelessWidget {
                               height: 42.h,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: DawnColors.buttonColor,
+                                color: DawnColors.primary,
                               ),
                               child: state is KhatmaLoading
                                   ? const CircularProgressIndicator(

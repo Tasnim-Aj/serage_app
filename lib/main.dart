@@ -7,6 +7,7 @@ import 'package:serag_app/bloc/khatma/khatma_bloc.dart';
 import 'package:serag_app/cubit/theme_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
 import 'config/config.dart';
 import 'view/style/gradient_background.dart';
 import 'view/ui/home_page.dart';
@@ -41,29 +42,36 @@ class MyApp extends StatelessWidget {
       builder: (context, _) {
         return MultiBlocProvider(
           providers: [
-            // BlocProvider(
-            //   create: (context) => KhatmatKhasaBloc(Supabase.instance.client),
-            // ),
-
+            BlocProvider(
+              create: (context) => KhatmatKhasaBloc(Supabase.instance.client),
+            ),
             BlocProvider(
               create: (context) =>
                   KhatmaBloc(Supabase.instance.client)..add(LoadKhatmasEvent()),
             ),
+            BlocProvider(
+              create: (context) => KhatmatKhasaBloc(Supabase.instance.client)
+                ..add(LoadKhatmatKhasaEvent()),
+            ),
           ],
-          child: BlocBuilder<ThemeCubit, ThemeData>(
-            builder: (context, theme) {
-              return MaterialApp(
-                theme: theme,
-                debugShowCheckedModeBanner: false,
-                locale: const Locale('ar', ''),
-                home: GradientBackground(
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: HomePage(),
+          child: BlocProvider(
+            create: (context) => ThemeCubit(),
+            // create: (context) => ThemeCubit()..updateThemeBasedOnTime(),
+            child: BlocBuilder<ThemeCubit, ThemeData>(
+              builder: (context, theme) {
+                return MaterialApp(
+                  theme: theme,
+                  debugShowCheckedModeBanner: false,
+                  locale: const Locale('ar', ''),
+                  home: GradientBackground(
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: HomePage(),
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         );
       },

@@ -19,9 +19,7 @@ class KhatmaBloc extends Bloc<KhatmaEvent, KhatmaState> {
       AddKhatmaEvent event, Emitter<KhatmaState> emit) async {
     emit(KhatmaLoading());
     try {
-      await supabase
-          .from('khatma')
-          .insert(event.khatma.toMap()); // استخدم الدالة الجديدة
+      await supabase.from('khatma').insert(event.khatma.toMap());
 
       emit(KhatmaSuccess([]));
     } catch (e) {

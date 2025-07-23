@@ -28,12 +28,7 @@ class DefaultAppbar extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10.r),
             child: Text(
               title,
-              style: TextStyle(
-                fontSize: 30.sp,
-                fontWeight: FontWeight.w400,
-                height: 1.0,
-                letterSpacing: 0,
-              ),
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           Transform.rotate(
@@ -42,6 +37,7 @@ class DefaultAppbar extends StatelessWidget {
               'assets/icons/floral_design.png',
               width: 30.w,
               height: 30.h,
+              // color: Colors.white,
             ),
           ),
         ],

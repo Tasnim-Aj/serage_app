@@ -487,8 +487,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
-                                                  color:
-                                                      DawnColors.buttonColor),
+                                                  color: DawnColors.primary),
                                               child: Text('إضافة'),
                                             ),
                                           ),

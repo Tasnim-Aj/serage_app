@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:serag_app/view/ui/gelsat_dhakr_page.dart';
 import 'package:serag_app/view/ui/mspah_page.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 
-import '../style/app_colors.dart';
+import '../../cubit/theme_cubit.dart';
+import '../style/app_theme.dart';
 import '../style/gradient_background.dart';
 import 'al_khatmat_page.dart';
-import 'khatma_page.dart';
+import 'khatmat_khasa_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,7 +30,9 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
-          DefaultAppbar(title: 'سراج'),
+          DefaultAppbar(
+            title: 'سراج',
+          ),
           Stack(
             children: [
               Column(
@@ -44,20 +47,14 @@ class _HomePageState extends State<HomePage> {
                         height: 151.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: DawnColors.primary,
+                          color: Theme.of(context).primaryColor,
                         ),
                         child: Text(
                           ' المستخدم عند الفجر يعرض فقط \n '
                           'الأوراد و الختم الفجرية ،\n'
                           ' و ما بقي من اليوم يعرض الأوراد و \n '
                           'الختم الاخرى',
-                          style: GoogleFonts.inter(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w400,
-                            color: DawnColors.textColor,
-                            letterSpacing: 0,
-                            height: 1.0,
-                          ),
+                          style: Theme.of(context).textTheme.displayLarge,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -68,10 +65,8 @@ class _HomePageState extends State<HomePage> {
                           width: 68.w,
                           height: 68.h,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                'assets/icons/star5.png',
-                              ),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/icons/star5.png'),
                             ),
                           ),
                           alignment: Alignment.center,
@@ -95,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                     height: 122.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: DawnColors.dark,
+                      color: Theme.of(context).cardColor,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -126,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                           () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
-                                GradientBackground(child: KhatmaPage())));
+                                GradientBackground(child: KhatmatKhasaPage())));
                       }),
                       SizedBox(height: 14.95.h),
                       _buildMainButton('ختمة عامة', 'assets/icons/group41.png',
@@ -165,6 +160,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+        child: Icon(
+          context.watch<ThemeCubit>().state == AppThemes.darkTheme
+              ? Icons.light_mode
+              : Icons.dark_mode,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
@@ -178,7 +182,7 @@ class _HomePageState extends State<HomePage> {
         width: 100.w,
         height: 95.05.h,
         decoration: BoxDecoration(
-          color: DawnColors.primary,
+          color: Theme.of(context).primaryColor,
           shape: BoxShape.circle,
         ),
         child: Column(
@@ -191,41 +195,9 @@ class _HomePageState extends State<HomePage> {
             ),
             Text(
               text,
-              style: TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 20.sp,
-                color: DawnColors.textColor,
-                letterSpacing: 0,
-                height: 1.0,
-              ),
+              style: Theme.of(context).textTheme.displayLarge,
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildKhatmaOption(String text) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          showKhatmaOptions = false;
-        });
-      },
-      child: Container(
-        width: 100.w,
-        height: 95.05.h,
-        decoration: BoxDecoration(
-          color: DawnColors.primary,
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              color: DawnColors.textColor,
-            ),
-          ),
         ),
       ),
     );

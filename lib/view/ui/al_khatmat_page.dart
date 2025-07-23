@@ -9,7 +9,7 @@ import '../../bloc/khatma/khatma_bloc.dart';
 import '../../model/khatma_model.dart';
 import '../style/app_colors.dart';
 import '../widgets/default_appbar.dart';
-import 'khatma_khasa_page.dart';
+import 'create_khatma_page.dart';
 
 class AlKhatmatPage extends StatelessWidget {
   final int initialPersons;
@@ -68,7 +68,7 @@ class _AlKhatmatView extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              GradientBackground(child: KhatmaKhasaPage()),
+                              GradientBackground(child: CreateKhatmaPage()),
                         ),
                       );
                     }
@@ -92,7 +92,7 @@ class _AlKhatmatView extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final khatma = state.khatmas[index];
                           print('Khatma data: ${khatma.toMap()}');
-                          return _buildKhatmaItem(khatma, index);
+                          return _buildKhatmaItem(context, khatma, index);
                         },
                       );
                     }
@@ -111,7 +111,7 @@ class _AlKhatmatView extends StatelessWidget {
                   onPressed: () {
                     _showAddKhatmaBottomSheet(context, khatmaBloc);
                   },
-                  backgroundColor: DawnColors.dark,
+                  backgroundColor: Theme.of(context).cardColor,
                   child: const Icon(Icons.add, color: Colors.white),
                 ),
               ],
@@ -157,13 +157,9 @@ class _AlKhatmatView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               'النية',
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                             SizedBox(height: 20.h),
                             DropdownButtonFormField<String>(
@@ -191,15 +187,9 @@ class _AlKhatmatView extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 27.h),
-                            const Text(
+                            Text(
                               'مدة الختمة',
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                height: 1.0,
-                                letterSpacing: 0.0,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                             SizedBox(height: 20.h),
                             GestureDetector(
@@ -240,15 +230,10 @@ class _AlKhatmatView extends StatelessWidget {
                                 ),
                                 child: Text(
                                   _selectedDateRange == null
-                                      ? 'اختر التاريخ'
+                                      ? ''
                                       : _formatDateRange(_selectedDateRange!),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: DawnColors.textColor,
-                                    height: 1.0,
-                                    letterSpacing: 0.0,
-                                    fontSize: 20.sp,
-                                  ),
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium,
                                 ),
                               ),
                             ),
@@ -344,7 +329,7 @@ class _AlKhatmatView extends StatelessWidget {
                                 height: 44.h,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: DawnColors.buttonColor,
+                                  color: DawnColors.primary,
                                 ),
                                 child: const Text('إضافة'),
                               ),
@@ -368,14 +353,14 @@ class _AlKhatmatView extends StatelessWidget {
         "${range.end.day}/${range.end.month}/${range.end.year}";
   }
 
-  Widget _buildKhatmaItem(KhatmaModel khatma, int index) {
+  Widget _buildKhatmaItem(BuildContext context, KhatmaModel khatma, int index) {
     return Container(
       margin: EdgeInsets.only(left: 25.r, right: 25.r, bottom: 24.r),
       width: 309.w,
       height: 195.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: DawnColors.primary,
+        color: Theme.of(context).primaryColor,
       ),
       child: Column(
         children: [
@@ -390,7 +375,9 @@ class _AlKhatmatView extends StatelessWidget {
                   width: 89.82.w,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/icons/star5.png')),
+                        image: AssetImage(
+                      'assets/icons/star5.png',
+                    )),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -420,13 +407,7 @@ class _AlKhatmatView extends StatelessWidget {
                 ),
                 Text(
                   khatma.name,
-                  style: GoogleFonts.inter(
-                    fontSize: 25.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
-                    letterSpacing: 0,
-                    height: 1.0,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ],
             ),
@@ -435,7 +416,7 @@ class _AlKhatmatView extends StatelessWidget {
             margin: EdgeInsets.only(top: 4.18.r),
             width: 279.w,
             height: 1.h,
-            color: DawnColors.dark,
+            color: Theme.of(context).cardColor,
           ),
           Padding(
             padding: EdgeInsets.only(left: 15.r, right: 15.r, top: 8.r),
@@ -444,22 +425,12 @@ class _AlKhatmatView extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    Text(
-                      'تاريخ البدء',
-                      style: GoogleFonts.inter(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                    ),
+                    Text('تاريخ البدء',
+                        style: Theme.of(context).textTheme.bodyMedium),
                     SizedBox(height: 9.r),
                     Text(
                       _formatDate(khatma.start_date),
-                      style: GoogleFonts.inter(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: DawnColors.textColor2,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),
@@ -470,23 +441,11 @@ class _AlKhatmatView extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Text(
-                      'تاريخ الانتهاء',
-                      style: GoogleFonts.inter(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                      ),
-                    ),
+                    Text('تاريخ الانتهاء',
+                        style: Theme.of(context).textTheme.bodyMedium),
                     SizedBox(height: 9.r),
-                    Text(
-                      _formatDate(khatma.end_date),
-                      style: GoogleFonts.inter(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: DawnColors.textColor2,
-                      ),
-                    ),
+                    Text(_formatDate(khatma.end_date),
+                        style: Theme.of(context).textTheme.bodySmall),
                   ],
                 ),
               ],

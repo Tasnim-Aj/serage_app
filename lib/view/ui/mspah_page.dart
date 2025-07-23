@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../cubit/theme_cubit.dart';
 import '../style/app_colors.dart';
+import '../style/app_theme.dart';
 import '../widgets/default_appbar.dart';
 
 class MspahPage extends StatelessWidget {
@@ -13,6 +16,7 @@ class MspahPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<dynamic> num = [1, 10, 33, 41, 100, 500, 1000, 'مخصص'];
     double radius = 160.r;
+    final isDarkMode = context.watch<ThemeCubit>().state == AppThemes.darkTheme;
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -44,7 +48,7 @@ class MspahPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
-                              color: DawnColors.buttonColor,
+                              color: DawnColors.primary,
                               letterSpacing: 0,
                               height: 1.0,
                             ),
@@ -80,21 +84,13 @@ class MspahPage extends StatelessWidget {
                 width: 113.w,
                 height: 24.h,
                 decoration: BoxDecoration(
-                  color: DawnColors.primary,
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Row(
                   children: [
-                    Text(
-                      'المتبقي',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        letterSpacing: 0,
-                        height: 1.0,
-                      ),
-                    ),
+                    Text('المتبقي',
+                        style: Theme.of(context).textTheme.bodySmall),
                     SizedBox(
                       width: 5.w,
                     ),
@@ -126,7 +122,6 @@ class MspahPage extends StatelessWidget {
                 child: Text(
                   'سبحان الله العظيم',
                   style: TextStyle(
-                    // fontSize: 30,
                     fontSize: 30.sp,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -148,13 +143,7 @@ class MspahPage extends StatelessWidget {
                   ),
                   child: Text(
                     '5',
-                    style: TextStyle(
-                      fontSize: 30.sp,
-                      fontWeight: FontWeight.w400,
-                      color: DawnColors.textColor,
-                      letterSpacing: 0.3,
-                      height: 0.5,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ),
@@ -205,7 +194,9 @@ class MspahPage extends StatelessWidget {
                     height: 284.27.h,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFFB994706B),
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Color(0xFFB99470).withOpacity(0.42)
+                          : Color(0xFFF2907D).withOpacity(0.41),
                     ),
                     child: Image.asset(
                       'assets/icons/mandala.png',

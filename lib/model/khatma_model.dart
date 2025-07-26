@@ -35,13 +35,7 @@ class KhatmaModel {
 
   @override
   String toString() {
-    return 'KhatmaModel{' +
-        ' name: $name,' +
-        ' start_date: $start_date,' +
-        ' end_date: $end_date,' +
-        ' total_persons: $total_persons,' +
-        ' is_fajri: $is_fajri,' +
-        '}';
+    return 'KhatmaModel{ name: $name, start_date: $start_date, end_date: $end_date, total_persons: $total_persons, is_fajri: $is_fajri,}';
   }
 
   KhatmaModel copyWith({
@@ -62,11 +56,11 @@ class KhatmaModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': this.name,
-      'start_date': this.start_date,
-      'end_date': this.end_date,
-      'total_persons': this.total_persons,
-      'is_fajri': this.is_fajri,
+      'name': name,
+      'start_date': start_date,
+      'end_date': end_date,
+      'total_persons': total_persons,
+      'is_fajri': is_fajri,
     };
   }
 

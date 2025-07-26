@@ -64,8 +64,8 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           width: 68.w,
                           height: 68.h,
-                          decoration: BoxDecoration(
-                            image: const DecorationImage(
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
                               image: AssetImage('assets/icons/star5.png'),
                             ),
                           ),
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                       _buildMainButton('ختمة عامة', 'assets/icons/group41.png',
                           () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => GradientBackground(
+                            builder: (context) => const GradientBackground(
                                     child: AlKhatmatPage(
                                   initialPersons: 1,
                                 ))));
@@ -144,14 +144,14 @@ class _HomePageState extends State<HomePage> {
                           () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
-                                GradientBackground(child: GelsatDhakrPage())));
+                                const GradientBackground(child: GelsatDhakrPage())));
                       }),
                       SizedBox(height: 14.95.h),
                       _buildMainButton(
                           'مسابقة بذِكر', 'assets/icons/counter.png', () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) =>
-                                GradientBackground(child: MspahPage())));
+                                const GradientBackground(child: MspahPage())));
                       }),
                     ],
                   ),

@@ -7,7 +7,7 @@ import '../style/app_colors.dart';
 import '../widgets/default_appbar.dart';
 
 class GelsatDhakrPage extends StatefulWidget {
-  GelsatDhakrPage({super.key});
+  const GelsatDhakrPage({super.key});
 
   @override
   State<GelsatDhakrPage> createState() => _GelsatDhakrPageState();
@@ -64,7 +64,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                   alignment: Alignment.center,
                                   height: 90.62.h,
                                   width: 89.82.w,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     image: DecorationImage(
                                         image: AssetImage(
                                             'assets/icons/star5.png')),
@@ -268,7 +268,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                     builder: (BuildContext context) {
                       return StatefulBuilder(
                         builder: (context, setModalState) {
-                          double _sliderValue = 1;
+                          double sliderValue = 1;
                           return DraggableScrollableSheet(
                             initialChildSize: 0.6,
                             maxChildSize: 0.9,
@@ -277,7 +277,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                               return Directionality(
                                 textDirection: TextDirection.rtl,
                                 child: Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(30),
                                       topRight: Radius.circular(30),
@@ -318,7 +318,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                                     DropdownMenuItem<String>(
                                                       value: intent,
                                                       child: Text(intent,
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               color: Colors
                                                                   .black)),
                                                     ))
@@ -355,7 +355,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                                     data: Theme.of(context)
                                                         .copyWith(
                                                       colorScheme:
-                                                          ColorScheme.light(
+                                                          const ColorScheme.light(
                                                         primary:
                                                             DawnColors.primary,
                                                         onPrimary: Colors.white,
@@ -412,13 +412,13 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                             min: 1,
                                             max: 100,
                                             divisions: 99,
-                                            value: _sliderValue,
+                                            value: sliderValue,
                                             label:
-                                                _sliderValue.round().toString(),
+                                                sliderValue.round().toString(),
                                             activeColor: DawnColors.primary,
                                             onChanged: (value) {
                                               setModalState(() {
-                                                _sliderValue = value;
+                                                sliderValue = value;
                                               });
                                             },
                                           ),
@@ -435,7 +435,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5),
-                                                    color: Color(0xFF7D6358)),
+                                                    color: const Color(0xFF7D6358)),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -454,7 +454,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                                         height: 1.0,
                                                       ),
                                                     ),
-                                                    Icon(
+                                                    const Icon(
                                                       Icons.share,
                                                       color: Colors.white,
                                                     ),
@@ -488,7 +488,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   color: DawnColors.primary),
-                                              child: Text('إضافة'),
+                                              child: const Text('إضافة'),
                                             ),
                                           ),
                                         ],
@@ -505,7 +505,7 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                   );
                 },
                 backgroundColor: DawnColors.dark,
-                child: Icon(
+                child: const Icon(
                   Icons.add,
                   color: Colors.white,
                   size: 50,

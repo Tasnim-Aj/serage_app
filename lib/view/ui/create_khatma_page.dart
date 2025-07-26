@@ -27,7 +27,7 @@ class _KhatmaKhasaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _personsController = TextEditingController();
+    final TextEditingController personsController = TextEditingController();
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -74,7 +74,7 @@ class _KhatmaKhasaView extends StatelessWidget {
                           ),
                           SizedBox(height: 20.h),
                           TextField(
-                            controller: _personsController,
+                            controller: personsController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               filled: true,
@@ -87,7 +87,7 @@ class _KhatmaKhasaView extends StatelessWidget {
                           SizedBox(height: 29.h),
                           GestureDetector(
                             onTap: () {
-                              if (_personsController.text.isEmpty) {
+                              if (personsController.text.isEmpty) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content:
@@ -97,7 +97,7 @@ class _KhatmaKhasaView extends StatelessWidget {
                               }
 
                               final persons =
-                                  int.tryParse(_personsController.text) ?? 1;
+                                  int.tryParse(personsController.text) ?? 1;
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

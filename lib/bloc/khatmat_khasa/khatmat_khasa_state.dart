@@ -8,6 +8,7 @@ sealed class KhatmatKhasaState {
 final class KhatmatKhasaInitial extends KhatmatKhasaState {}
 
 class KhatmatKhasaUpdatedState extends KhatmatKhasaState {
+  @override
   final Set<int> reservedParts;
 
   KhatmatKhasaUpdatedState({required this.reservedParts});

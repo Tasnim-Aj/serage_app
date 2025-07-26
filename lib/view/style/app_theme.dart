@@ -53,7 +53,7 @@ class AppThemes {
             letterSpacing: 0.0,
             color: DawnColors.textColor,
           )),
-      buttonTheme: ButtonThemeData(
+      buttonTheme: const ButtonThemeData(
         buttonColor: DawnColors.primary,
       ));
 
@@ -104,7 +104,7 @@ class AppThemes {
             letterSpacing: 0.0,
             color: DuskColors.textColor,
           )),
-      buttonTheme: ButtonThemeData(
+      buttonTheme: const ButtonThemeData(
         buttonColor: DuskColors.primary,
       )
       // iconTheme: IconThemeData(color: Colors.white),

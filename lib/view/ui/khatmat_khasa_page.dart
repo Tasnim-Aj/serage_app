@@ -7,6 +7,7 @@ import 'package:serag_app/view/style/gradient_background.dart';
 import 'package:serag_app/view/ui/khatma_page.dart';
 
 import '../../bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
+import '../../service/notification_service.dart';
 import '../widgets/default_appbar.dart';
 
 class KhatmatKhasaPage extends StatelessWidget {
@@ -33,7 +34,7 @@ class KhatmatKhasaPage extends StatelessWidget {
               child: BlocBuilder<KhatmatKhasaBloc, KhatmatKhasaState>(
                 builder: (context, state) {
                   if (state is KhatmaKhasaLoading) {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
@@ -50,7 +51,7 @@ class KhatmatKhasaPage extends StatelessWidget {
                       },
                     );
                   }
-                  return Text('لا توجد بيانات');
+                  return const Text('لا توجد بيانات');
                 },
               ),
             ),
@@ -67,7 +68,7 @@ class KhatmatKhasaPage extends StatelessWidget {
                       context, context.read<KhatmatKhasaBloc>());
                 },
                 backgroundColor: Theme.of(context).cardColor,
-                child: Icon(
+                child: const Icon(
                   Icons.add,
                   color: DawnColors.white,
                 ),
@@ -170,8 +171,8 @@ class KhatmatKhasaPage extends StatelessWidget {
                   Row(
                     children: [
                       parts < 30
-                          ? Text('الختمة غير منتهية')
-                          : Text('الختمة منتهية'),
+                          ? const Text('الختمة غير منتهية')
+                          : const Text('الختمة منتهية'),
                     ],
                   ),
                   SizedBox(
@@ -183,8 +184,8 @@ class KhatmatKhasaPage extends StatelessWidget {
                     children:
                         _getUnreservedParts(khatma.reserved_parts).map((part) {
                       return Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: Theme.of(context).cardColor.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8),
@@ -206,7 +207,7 @@ class KhatmatKhasaPage extends StatelessWidget {
   }
 
   void _showAddKhatmaBottomSheet(BuildContext context, KhatmatKhasaBloc bloc) {
-    String? _selectedIntention;
+    String? selectedIntention;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -223,8 +224,8 @@ class KhatmatKhasaPage extends StatelessWidget {
                 return Directionality(
                   textDirection: TextDirection.rtl,
                   child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
                       ),
@@ -244,7 +245,7 @@ class KhatmatKhasaPage extends StatelessWidget {
                             ),
                             SizedBox(height: 20.h),
                             DropdownButtonFormField<String>(
-                              value: _selectedIntention,
+                              value: selectedIntention,
                               dropdownColor: Colors.white,
                               decoration: InputDecoration(
                                 filled: true,
@@ -263,7 +264,7 @@ class KhatmatKhasaPage extends StatelessWidget {
                                   .toList(),
                               onChanged: (value) {
                                 setModalState(() {
-                                  _selectedIntention = value;
+                                  selectedIntention = value;
                                 });
                               },
                             ),
@@ -283,6 +284,14 @@ class KhatmatKhasaPage extends StatelessWidget {
 
                                 if (state is KhatmaKhasaLoaded) {
                                   Navigator.pop(context);
+                                  if (selectedIntention != null) {
+                                    final now = DateTime.now();
+                                    NotificationService.scheduleReminderAfter(
+                                      khatmaName: selectedIntention!,
+                                      creationTime: now,
+                                      duration: Duration(minutes: 1),
+                                    );
+                                  }
                                 }
                               },
                               builder: (context, state) {
@@ -290,7 +299,7 @@ class KhatmatKhasaPage extends StatelessWidget {
                                   onTap: state is KhatmaKhasaLoading
                                       ? null // تعطيل الزر أثناء التحميل
                                       : () {
-                                          if (_selectedIntention == null) {
+                                          if (selectedIntention == null) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(
@@ -302,7 +311,7 @@ class KhatmatKhasaPage extends StatelessWidget {
                                           bloc.add(AddKhatmaKhasaEvent(
                                             khatma: KhatmatKhasaModel(
                                               id: 1,
-                                              name: _selectedIntention!,
+                                              name: selectedIntention!,
                                               reserved_parts: [],
                                             ),
                                           ));
@@ -339,9 +348,9 @@ class KhatmatKhasaPage extends StatelessWidget {
                                         color: Theme.of(context).primaryColor,
                                       ),
                                       child: state is KhatmaKhasaLoading
-                                          ? CircularProgressIndicator(
+                                          ? const CircularProgressIndicator(
                                               color: Colors.white)
-                                          : Text('إضافة')),
+                                          : const Text('إضافة')),
                                 );
                               },
                             ),

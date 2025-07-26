@@ -89,7 +89,7 @@ class OptionsPage extends StatelessWidget {
             alignment: Alignment.center,
             width: 68.w,
             height: 68.h,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/icons/star5.png'),
               ),

@@ -136,7 +136,7 @@ class MspahPage extends StatelessWidget {
                   alignment: Alignment.center,
                   width: 100.w,
                   height: 100.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/icons/frame_3.png'),
                     ),
@@ -176,7 +176,7 @@ class MspahPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 30.sp,
                               fontWeight: FontWeight.w400,
-                              color: Color(0xFF412B2D),
+                              color: const Color(0xFF412B2D),
                               height: 0.5,
                               letterSpacing: 0.3,
                             ),
@@ -195,8 +195,8 @@ class MspahPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).brightness == Brightness.light
-                          ? Color(0xFFB99470).withOpacity(0.42)
-                          : Color(0xFFF2907D).withOpacity(0.41),
+                          ? const Color(0xFFB99470).withOpacity(0.42)
+                          : const Color(0xFFF2907D).withOpacity(0.41),
                     ),
                     child: Image.asset(
                       'assets/icons/mandala.png',
@@ -224,7 +224,7 @@ class MspahPage extends StatelessWidget {
                               width: 23.32.w,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Text(
@@ -232,7 +232,7 @@ class MspahPage extends StatelessWidget {
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 15.sp,
-                              color: Color(0xFF412B2D),
+                              color: const Color(0xFF412B2D),
                               height: 0.5,
                               letterSpacing: 0.0,
                             ),

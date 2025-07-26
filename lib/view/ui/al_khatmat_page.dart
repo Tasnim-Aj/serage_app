@@ -68,7 +68,7 @@ class _AlKhatmatView extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              GradientBackground(child: CreateKhatmaPage()),
+                              const GradientBackground(child: CreateKhatmaPage()),
                         ),
                       );
                     }
@@ -123,9 +123,9 @@ class _AlKhatmatView extends StatelessWidget {
   }
 
   void _showAddKhatmaBottomSheet(BuildContext context, KhatmaBloc bloc) {
-    String? _selectedIntention;
-    DateTimeRange? _selectedDateRange;
-    bool _isFajri = false;
+    String? selectedIntention;
+    DateTimeRange? selectedDateRange;
+    bool isFajri = false;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -142,8 +142,8 @@ class _AlKhatmatView extends StatelessWidget {
                 return Directionality(
                   textDirection: TextDirection.rtl,
                   child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30),
                       ),
@@ -163,7 +163,7 @@ class _AlKhatmatView extends StatelessWidget {
                             ),
                             SizedBox(height: 20.h),
                             DropdownButtonFormField<String>(
-                              value: _selectedIntention,
+                              value: selectedIntention,
                               dropdownColor: Colors.white,
                               decoration: InputDecoration(
                                 filled: true,
@@ -182,7 +182,7 @@ class _AlKhatmatView extends StatelessWidget {
                                   .toList(),
                               onChanged: (value) {
                                 setModalState(() {
-                                  _selectedIntention = value;
+                                  selectedIntention = value;
                                 });
                               },
                             ),
@@ -197,13 +197,13 @@ class _AlKhatmatView extends StatelessWidget {
                                 final DateTimeRange? picked =
                                     await showDateRangePicker(
                                   context: context,
-                                  initialDateRange: _selectedDateRange,
+                                  initialDateRange: selectedDateRange,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
                                   builder: (context, child) {
                                     return Theme(
                                       data: Theme.of(context).copyWith(
-                                        colorScheme: ColorScheme.light(
+                                        colorScheme: const ColorScheme.light(
                                           primary: DawnColors.primary,
                                           onPrimary: Colors.white,
                                           onSurface: Colors.black,
@@ -215,7 +215,7 @@ class _AlKhatmatView extends StatelessWidget {
                                 );
                                 if (picked != null) {
                                   setModalState(() {
-                                    _selectedDateRange = picked;
+                                    selectedDateRange = picked;
                                   });
                                 }
                               },
@@ -229,9 +229,9 @@ class _AlKhatmatView extends StatelessWidget {
                                   border: Border.all(color: Colors.grey),
                                 ),
                                 child: Text(
-                                  _selectedDateRange == null
+                                  selectedDateRange == null
                                       ? ''
-                                      : _formatDateRange(_selectedDateRange!),
+                                      : _formatDateRange(selectedDateRange!),
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
                                 ),
@@ -241,10 +241,10 @@ class _AlKhatmatView extends StatelessWidget {
                             Row(
                               children: [
                                 Checkbox(
-                                  value: _isFajri,
+                                  value: isFajri,
                                   onChanged: (bool? value) {
                                     setModalState(() {
-                                      _isFajri = value ?? false;
+                                      isFajri = value ?? false;
                                     });
                                   },
                                   activeColor: DawnColors.primary,
@@ -298,8 +298,8 @@ class _AlKhatmatView extends StatelessWidget {
                             ),
                             InkWell(
                               onTap: () {
-                                if (_selectedIntention == null ||
-                                    _selectedDateRange == null) {
+                                if (selectedIntention == null ||
+                                    selectedDateRange == null) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
@@ -310,15 +310,15 @@ class _AlKhatmatView extends StatelessWidget {
 
                                 bloc.add(AddKhatmaEvent(
                                   KhatmaModel(
-                                    name: _selectedIntention!,
+                                    name: selectedIntention!,
                                     start_date:
-                                        _selectedDateRange!.start.toString(),
+                                        selectedDateRange!.start.toString(),
                                     end_date:
-                                        _selectedDateRange!.end.toString(),
+                                        selectedDateRange!.end.toString(),
                                     total_persons:
                                         int.tryParse(_personsController.text) ??
                                             1,
-                                    is_fajri: _isFajri,
+                                    is_fajri: isFajri,
                                   ),
                                 ));
                               },

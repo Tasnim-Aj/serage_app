@@ -21,7 +21,7 @@ class KhatmaBloc extends Bloc<KhatmaEvent, KhatmaState> {
     try {
       await supabase.from('khatma').insert(event.khatma.toMap());
 
-      emit(KhatmaSuccess([]));
+      emit(KhatmaSuccess(const []));
     } catch (e) {
       emit(KhatmaError('فشل الإضافة: ${e.toString()}'));
     }

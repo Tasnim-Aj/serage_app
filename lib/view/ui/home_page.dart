@@ -6,7 +6,6 @@ import 'package:serag_app/view/ui/mspah_page.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 
 import '../../cubit/theme_cubit.dart';
-import '../style/app_theme.dart';
 import '../style/gradient_background.dart';
 import 'al_khatmat_page.dart';
 import 'khatmat_khasa_page.dart';
@@ -23,6 +22,14 @@ class _HomePageState extends State<HomePage> {
   bool showtespeehOptions = false;
   final GlobalKey _khatmaButtonKey = GlobalKey();
   final GlobalKey _tespeehButtonKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ThemeCubit>().updateThemeBasedOnTime();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,8 +150,8 @@ class _HomePageState extends State<HomePage> {
                       _buildMainButton('جلسة ذكر', 'assets/icons/meeting.png',
                           () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                const GradientBackground(child: GelsatDhakrPage())));
+                            builder: (context) => const GradientBackground(
+                                child: GelsatDhakrPage())));
                       }),
                       SizedBox(height: 14.95.h),
                       _buildMainButton(
@@ -161,14 +168,22 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<ThemeCubit>().toggleTheme(),
-        child: Icon(
-          context.watch<ThemeCubit>().state == AppThemes.darkTheme
-              ? Icons.light_mode
-              : Icons.dark_mode,
-          color: Colors.white,
-        ),
+        onPressed: () {
+          // اختبار وضع الفجر المزيف
+          // context.read<ThemeCubit>().updateThemeBasedOnTime(simulateTest: true);
+          context.read<ThemeCubit>().updateThemeBasedOnTime();
+        },
+        child: Icon(Icons.access_time),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+      //   child: Icon(
+      //     context.watch<ThemeCubit>().state == AppThemes.darkTheme
+      //         ? Icons.light_mode
+      //         : Icons.dark_mode,
+      //     color: Colors.white,
+      //   ),
+      // ),
     );
   }
 

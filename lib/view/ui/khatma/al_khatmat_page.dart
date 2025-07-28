@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:serag_app/view/style/gradient_background.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../bloc/khatma/khatma_bloc.dart';
-import '../../model/khatma_model.dart';
-import '../style/app_colors.dart';
-import '../widgets/default_appbar.dart';
+import '../../../bloc/khatma/khatma_bloc.dart';
+import '../../../model/khatma_model.dart';
+import '../../style/app_colors.dart';
+import '../../widgets/default_appbar.dart';
 import 'create_khatma_page.dart';
 
 class AlKhatmatPage extends StatelessWidget {
@@ -67,8 +67,8 @@ class _AlKhatmatView extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const GradientBackground(child: CreateKhatmaPage()),
+                          builder: (context) => const GradientBackground(
+                              child: CreateKhatmaPage()),
                         ),
                       );
                     }
@@ -91,7 +91,7 @@ class _AlKhatmatView extends StatelessWidget {
                         itemCount: state.khatmas.length,
                         itemBuilder: (context, index) {
                           final khatma = state.khatmas[index];
-                          print('Khatma data: ${khatma.toMap()}');
+                          // print('Khatma data: ${khatma.toMap()}');
                           return _buildKhatmaItem(context, khatma, index);
                         },
                       );
@@ -313,8 +313,7 @@ class _AlKhatmatView extends StatelessWidget {
                                     name: selectedIntention!,
                                     start_date:
                                         selectedDateRange!.start.toString(),
-                                    end_date:
-                                        selectedDateRange!.end.toString(),
+                                    end_date: selectedDateRange!.end.toString(),
                                     total_persons:
                                         int.tryParse(_personsController.text) ??
                                             1,

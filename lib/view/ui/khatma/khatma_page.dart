@@ -6,8 +6,8 @@ import 'package:serag_app/model/khatmat_khasa_model.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
-import '../style/app_colors.dart';
+import '../../../bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
+import '../../style/app_colors.dart';
 
 class KhatmaPage extends StatelessWidget {
   final KhatmatKhasaModel khatma;

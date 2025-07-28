@@ -1,146 +1,296 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:serag_app/view/style/gradient_background.dart';
-// import 'package:serag_app/view/ui/al_khatmat_page.dart';
-// import 'package:serag_app/view/widgets/default_appbar.dart';
+// void _showAddDhakrBottomSheet(BuildContext context, GelsatDhakrBloc bloc) {
+//   String? _selectedIntention;
+//   DateTimeRange? _selectedDateRange;
+//   int sliderValue = 50000;
+//   // List<String> _names = [];
+//   // int total_persons = 0;
+//   // TextEditingController _nameController = TextEditingController();
+//   int _participantsCount = 1;
 //
-// import '../style/app_colors.dart';
-//
-// class KhatmaKhasaPage extends StatefulWidget {
-//   const KhatmaKhasaPage({super.key});
-//
-//   @override
-//   State<KhatmaKhasaPage> createState() => _KhatmaKhasaPageState();
-// }
-//
-// class _KhatmaKhasaPageState extends State<KhatmaKhasaPage> {
-//   final TextEditingController _personsController = TextEditingController();
-//   bool _isLoading = false;
-//
-//   Future<void> _createKhatma() async {
-//     if (_personsController.text.isEmpty) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('الرجاء إدخال عدد الأشخاص')),
-//       );
-//       return;
-//     }
-//
-//     setState(() => _isLoading = true);
-//
-//     try {
-//       debugPrint('=== محاولة إنشاء ختمة جديدة ===');
-//       debugPrint('قيمة عدد الأشخاص المدخلة: ${_personsController.text}');
-//
-//       final persons = int.tryParse(_personsController.text) ?? 1;
-//       debugPrint('عدد الأشخاص بعد التحويل: $persons');
-//
-//       debugPrint('الانتقال إلى صفحة AlKhatmatPage...');
-//       await Navigator.push(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => GradientBackground(
-//             child: AlKhatmatPage(initialPersons: persons),
-//           ),
-//         ),
-//       );
-//
-//       debugPrint('تم إنشاء الختمة بنجاح!');
-//     } catch (e, stackTrace) {
-//       debugPrint('====== خطأ أثناء إنشاء الختمة ======');
-//       debugPrint('نوع الخطأ: ${e.runtimeType}');
-//       debugPrint('رسالة الخطأ: ${e.toString()}');
-//       debugPrint('مسار الخطأ:');
-//       debugPrint(stackTrace.toString());
-//       debugPrint('==============================');
-//
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('حدث خطأ: ${e.toString()}')),
-//       );
-//     } finally {
-//       setState(() => _isLoading = false);
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Directionality(
-//       textDirection: TextDirection.rtl,
-//       child: GestureDetector(
-//         onTap: () => FocusScope.of(context).unfocus(),
-//         child: Scaffold(
-//           backgroundColor: Colors.transparent,
-//           body: SingleChildScrollView(
-//             child: Column(
-//               children: [
-//                 DefaultAppbar(title: 'ختمة خاصة'),
-//                 Container(
-//                   margin: EdgeInsets.only(left: 19.r, right: 19.r, top: 77.r),
-//                   padding: EdgeInsets.only(left: 25.r, right: 25.r, top: 33.r),
-//                   width: 323.w,
-//                   height: 608.h,
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(10),
+//   showModalBottomSheet(
+//     isScrollControlled: true,
+//     backgroundColor: Colors.transparent,
+//     context: context,
+//     builder: (BuildContext context) {
+//       return StatefulBuilder(
+//         builder: (context, setModalState) {
+//           return DraggableScrollableSheet(
+//             initialChildSize: 0.6,
+//             maxChildSize: 0.9,
+//             expand: false,
+//             builder: (context, scrollController) {
+//               return Directionality(
+//                 textDirection: TextDirection.rtl,
+//                 child: Container(
+//                   decoration: const BoxDecoration(
+//                     borderRadius: BorderRadius.only(
+//                       topLeft: Radius.circular(30),
+//                       topRight: Radius.circular(30),
+//                     ),
 //                     color: DawnColors.dark,
 //                   ),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         'عدد الأشخاص',
-//                         style: GoogleFonts.inter(
-//                           fontSize: 23.sp,
-//                           fontWeight: FontWeight.w400,
-//                           letterSpacing: 0,
-//                           height: 1.0,
-//                           color: DawnColors.textColor3,
-//                         ),
-//                       ),
-//                       SizedBox(height: 20.h),
-//                       TextField(
-//                         controller: _personsController,
-//                         keyboardType: TextInputType.number,
-//                         decoration: InputDecoration(
-//                           filled: true,
-//                           fillColor: Colors.white,
-//                           border: OutlineInputBorder(
-//                             borderRadius: BorderRadius.circular(10),
+//                   child: SingleChildScrollView(
+//                     controller: scrollController,
+//                     child: Padding(
+//                       padding:
+//                       EdgeInsets.only(right: 48.r, left: 50.r, top: 21.r),
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             'النية',
+//                             style: TextStyle(
+//                               fontSize: 23.sp,
+//                               color: Colors.white,
+//                               fontWeight: FontWeight.bold,
+//                             ),
 //                           ),
-//                         ),
-//                       ),
-//                       SizedBox(height: 29.h),
-//                       GestureDetector(
-//                         onTap: _createKhatma,
-//                         child: Container(
-//                           alignment: Alignment.center,
-//                           width: 257.w,
-//                           height: 42.h,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(10),
-//                             color: DawnColors.buttonColor,
+//                           SizedBox(height: 20.h),
+//                           DropdownButtonFormField<String>(
+//                             value: _selectedIntention,
+//                             dropdownColor: Colors.white,
+//                             decoration: InputDecoration(
+//                               filled: true,
+//                               fillColor: Colors.white,
+//                               border: OutlineInputBorder(
+//                                 borderRadius: BorderRadius.circular(12),
+//                               ),
+//                             ),
+//                             items: _intentions
+//                                 .map((intent) => DropdownMenuItem<String>(
+//                               value: intent,
+//                               child: Text(intent,
+//                                   style: const TextStyle(
+//                                       color: Colors.black)),
+//                             ))
+//                                 .toList(),
+//                             onChanged: (value) {
+//                               setModalState(() {
+//                                 _selectedIntention = value;
+//                               });
+//                             },
 //                           ),
-//                           child: _isLoading
-//                               ? CircularProgressIndicator(color: Colors.white)
-//                               : Text(
-//                                   'إنشاء و مشاركة',
-//                                   style: GoogleFonts.inter(
-//                                     fontSize: 25.sp,
+//                           SizedBox(height: 27.h),
+//                           Text(
+//                             'مدة الختمة',
+//                             style: TextStyle(
+//                               fontSize: 23.sp,
+//                               color: Colors.white,
+//                               fontWeight: FontWeight.bold,
+//                               height: 1.0,
+//                               letterSpacing: 0.0,
+//                             ),
+//                           ),
+//                           SizedBox(height: 20.h),
+//                           GestureDetector(
+//                             onTap: () async {
+//                               final DateTimeRange? picked =
+//                               await showDateRangePicker(
+//                                 context: context,
+//                                 initialDateRange: _selectedDateRange,
+//                                 firstDate: DateTime(2000),
+//                                 lastDate: DateTime(2100),
+//                                 builder: (context, child) {
+//                                   return Theme(
+//                                     data: Theme.of(context).copyWith(
+//                                       colorScheme: const ColorScheme.light(
+//                                         primary: DawnColors.primary,
+//                                         onPrimary: Colors.white,
+//                                         onSurface: Colors.black,
+//                                       ),
+//                                     ),
+//                                     child: child!,
+//                                   );
+//                                 },
+//                               );
+//                               if (picked != null) {
+//                                 setModalState(() {
+//                                   _selectedDateRange = picked;
+//                                 });
+//                               }
+//                             },
+//                             child: Container(
+//                               alignment: Alignment.center,
+//                               width: 266.71.w,
+//                               height: 39.h,
+//                               decoration: BoxDecoration(
+//                                 color: Colors.white,
+//                                 borderRadius: BorderRadius.circular(12),
+//                                 border: Border.all(color: Colors.grey),
+//                               ),
+//                               child: Text(
+//                                 _selectedDateRange == null
+//                                     ? ''
+//                                     : _formatDateRange(_selectedDateRange!),
+//                                 style: TextStyle(
 //                                     fontWeight: FontWeight.w400,
-//                                     letterSpacing: 0,
+//                                     color: DawnColors.textColor,
 //                                     height: 1.0,
-//                                     color: DawnColors.textButtonColor,
-//                                   ),
+//                                     letterSpacing: 0.0,
+//                                     fontSize: 20.sp),
+//                               ),
+//                             ),
+//                           ),
+//                           SizedBox(height: 22.h),
+//                           Text(
+//                             'العدد المفروض ',
+//                             style: TextStyle(
+//                               fontSize: 23.sp,
+//                               color: Colors.white,
+//                               fontWeight: FontWeight.w400,
+//                               letterSpacing: 0.0,
+//                               height: 1.0,
+//                             ),
+//                           ),
+//                           // StatefulBuilder(
+//                           //   builder: (BuildContext context,
+//                           //       StateSetter setModalState) {
+//                           //     return Slider(
+//                           //       min: 10000,
+//                           //       max: 100000,
+//                           //       divisions: 9,
+//                           //       value: sliderValue
+//                           //           .toDouble(), // تحويل int إلى double للسلايدر
+//                           //       label: '${sliderValue.round()}',
+//                           //       activeColor: Theme.of(context).primaryColor,
+//                           //       onChanged: (double newValue) {
+//                           //         setModalState(() {
+//                           //           sliderValue = newValue
+//                           //               .round(); // تحويل double إلى int عند التغيير
+//                           //           print('New Value: $sliderValue');
+//                           //         });
+//                           //       },
+//                           //     );
+//                           //   },
+//                           // ),
+//                           SizedBox(height: 22.h),
+//                           Text(
+//                             'عدد المشاركين',
+//                             style: TextStyle(
+//                               fontSize: 23.sp,
+//                               color: Colors.white,
+//                               fontWeight: FontWeight.w400,
+//                               letterSpacing: 0.0,
+//                               height: 1.0,
+//                             ),
+//                           ),
+//                           SizedBox(height: 10.h),
+//                           Row(
+//                             mainAxisAlignment: MainAxisAlignment.center,
+//                             children: [
+//                               IconButton(
+//                                 icon: Icon(Icons.remove, color: Colors.white),
+//                                 onPressed: () {
+//                                   if (_participantsCount > 1) {
+//                                     setModalState(() => _participantsCount--);
+//                                   }
+//                                 },
+//                               ),
+//                               Container(
+//                                 width: 60.w,
+//                                 padding:
+//                                 EdgeInsets.symmetric(horizontal: 12.w),
+//                                 decoration: BoxDecoration(
+//                                   color: Colors.white,
+//                                   borderRadius: BorderRadius.circular(8),
 //                                 ),
-//                         ),
+//                                 child: Text(
+//                                   '$_participantsCount',
+//                                   textAlign: TextAlign.center,
+//                                   style: TextStyle(fontSize: 18.sp),
+//                                 ),
+//                               ),
+//                               IconButton(
+//                                 icon: Icon(Icons.add, color: Colors.white),
+//                                 onPressed: () {
+//                                   setModalState(() => _participantsCount++);
+//                                 },
+//                               ),
+//                             ],
+//                           ),
+//                           SizedBox(height: 10.h),
+//                           Center(
+//                             child: InkWell(
+//                               onTap: _shareEntries,
+//                               child: Container(
+//                                 margin: EdgeInsets.only(top: 28.r),
+//                                 alignment: Alignment.center,
+//                                 width: 123.w,
+//                                 height: 29.h,
+//                                 decoration: BoxDecoration(
+//                                     borderRadius: BorderRadius.circular(5),
+//                                     color: const Color(0xFF7D6358)),
+//                                 child: Row(
+//                                   mainAxisAlignment:
+//                                   MainAxisAlignment.spaceBetween,
+//                                   children: [
+//                                     Image.asset('assets/icons/sparkling.png'),
+//                                     Text(
+//                                       'مشاركة',
+//                                       style: GoogleFonts.inter(
+//                                         fontWeight: FontWeight.w700,
+//                                         fontSize: 15.sp,
+//                                         color: Colors.white,
+//                                         letterSpacing: 0.0,
+//                                         height: 1.0,
+//                                       ),
+//                                     ),
+//                                     const Icon(
+//                                       Icons.share,
+//                                       color: Colors.white,
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                           InkWell(
+//                             onTap: () {
+//                               if (_selectedIntention == null ||
+//                                   _selectedDateRange == null ||
+//                                   _participantsCount == null) {
+//                                 ScaffoldMessenger.of(context).showSnackBar(
+//                                   const SnackBar(
+//                                     content: Text(
+//                                         'الرجاء اختيار النية والمدة و عدد المشاركين'),
+//                                   ),
+//                                 );
+//                                 return;
+//                               }
+//
+//                               bloc.add(AddDhakrEvent(
+//                                   dhakr: GelsatDhakrModel(
+//                                     name: _selectedIntention!,
+//                                     start_date:
+//                                     _selectedDateRange!.start.toString(),
+//                                     end_date: _selectedDateRange!.end.toString(),
+//                                     total_persons: _participantsCount,
+//                                     required_number: sliderValue,
+//                                   )));
+//
+//                               Navigator.pop(context);
+//                             },
+//                             child: Container(
+//                               margin: EdgeInsets.only(top: 26.34.r),
+//                               alignment: Alignment.center,
+//                               width: 296.05.w,
+//                               height: 44.h,
+//                               decoration: BoxDecoration(
+//                                   borderRadius: BorderRadius.circular(10),
+//                                   color: DawnColors.primary),
+//                               child: const Text('إضافة'),
+//                             ),
+//                           ),
+//                         ],
 //                       ),
-//                     ],
+//                     ),
 //                   ),
 //                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
+//               );
+//             },
+//           );
+//         },
+//       );
+//     },
+//   );
 // }

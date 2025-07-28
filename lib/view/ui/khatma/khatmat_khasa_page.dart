@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:serag_app/model/khatmat_khasa_model.dart';
 import 'package:serag_app/view/style/app_colors.dart';
 import 'package:serag_app/view/style/gradient_background.dart';
-import 'package:serag_app/view/ui/khatma_page.dart';
+import 'package:serag_app/view/ui/khatma/khatma_page.dart';
 
-import '../../bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
-import '../../service/notification_service.dart';
-import '../widgets/default_appbar.dart';
+import '../../../bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
+import '../../../service/notification_service.dart';
+import '../../widgets/default_appbar.dart';
 
 class KhatmatKhasaPage extends StatelessWidget {
   KhatmatKhasaPage({super.key});

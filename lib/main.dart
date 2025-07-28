@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:serag_app/bloc/gelsat_dhakr/gelsat_dhakr_bloc.dart';
 import 'package:serag_app/bloc/khatma/khatma_bloc.dart';
 import 'package:serag_app/cubit/theme_cubit.dart';
 import 'package:serag_app/view/ui/home_page.dart';
@@ -71,20 +73,26 @@ class MyApp extends StatelessWidget {
               create: (context) => KhatmatKhasaBloc(Supabase.instance.client)
                 ..add(LoadKhatmatKhasaEvent()),
             ),
+            BlocProvider(
+                create: (context) => GelsatDhakrBloc(Supabase.instance.client)
+                  ..add(LoadGelsatDhakrEvent()))
+            // BlocProvider(create: (context) => GelsatDhakrBloc(Supabase.instance.client)..add(event))
           ],
           child: BlocProvider(
             create: (context) => ThemeCubit(),
             // create: (context) => ThemeCubit()..updateThemeBasedOnTime(),
             child: BlocBuilder<ThemeCubit, ThemeData>(
               builder: (context, theme) {
-                return MaterialApp(
-                  theme: theme,
-                  debugShowCheckedModeBanner: false,
-                  locale: const Locale('ar', ''),
-                  home: const GradientBackground(
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: HomePage(),
+                return ProviderScope(
+                  child: MaterialApp(
+                    theme: theme,
+                    debugShowCheckedModeBanner: false,
+                    locale: const Locale('ar', ''),
+                    home: const GradientBackground(
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: HomePage(),
+                      ),
                     ),
                   ),
                 );

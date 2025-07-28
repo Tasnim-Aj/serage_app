@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:serag_app/view/style/gradient_background.dart';
-import 'package:serag_app/view/ui/al_khatmat_page.dart';
+import 'package:serag_app/view/ui/khatma/al_khatmat_page.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../bloc/khatma/khatma_bloc.dart';
-import '../style/app_colors.dart';
+import '../../../bloc/khatma/khatma_bloc.dart';
+import '../../style/app_colors.dart';
 
 class CreateKhatmaPage extends StatelessWidget {
   const CreateKhatmaPage({super.key});

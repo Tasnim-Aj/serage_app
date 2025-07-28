@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:serag_app/view/ui/gelsat_dhakr_page.dart';
-import 'package:serag_app/view/ui/mspah_page.dart';
+import 'package:serag_app/view/ui/dhaker/gelsat_dhakr_page.dart';
+import 'package:serag_app/view/ui/dhaker/mspah_page.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 
 import '../../cubit/theme_cubit.dart';
 import '../style/gradient_background.dart';
-import 'al_khatmat_page.dart';
-import 'khatmat_khasa_page.dart';
+import 'khatma/al_khatmat_page.dart';
+import 'khatma/khatmat_khasa_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage> {
           // context.read<ThemeCubit>().updateThemeBasedOnTime(simulateTest: true);
           context.read<ThemeCubit>().updateThemeBasedOnTime();
         },
-        child: Icon(Icons.access_time),
+        child: const Icon(Icons.access_time),
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () => context.read<ThemeCubit>().toggleTheme(),

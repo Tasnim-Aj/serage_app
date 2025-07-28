@@ -2,21 +2,24 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:serag_app/riverpod/counter_provider.dart';
 
-import '../../cubit/theme_cubit.dart';
-import '../style/app_colors.dart';
-import '../style/app_theme.dart';
-import '../widgets/default_appbar.dart';
+import '../../../cubit/theme_cubit.dart';
+import '../../style/app_colors.dart';
+import '../../style/app_theme.dart';
+import '../../widgets/default_appbar.dart';
 
-class MspahPage extends StatelessWidget {
+class MspahPage extends ConsumerWidget {
   const MspahPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     List<dynamic> num = [1, 10, 33, 41, 100, 500, 1000, 'مخصص'];
     double radius = 160.r;
     final isDarkMode = context.watch<ThemeCubit>().state == AppThemes.darkTheme;
+    final counter = ref.watch(counterProvider);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -142,7 +145,7 @@ class MspahPage extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    '5',
+                    '$counter',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -204,40 +207,45 @@ class MspahPage extends StatelessWidget {
                       width: 212.33.w,
                     ),
                   ),
-                  Container(
-                    // alignment: Alignment.center,
-                    width: 63.17.w,
-                    height: 63.17.h,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFFFFF8C7),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Transform.rotate(
-                            angle: pi / 4,
-                            child: Image.asset(
-                              'assets/icons/tap.png',
-                              height: 26.32.h,
-                              width: 23.32.w,
+                  InkWell(
+                    onTap: () {
+                      ref.read(counterProvider.notifier).state++;
+                    },
+                    child: Container(
+                      // alignment: Alignment.center,
+                      width: 63.17.w,
+                      height: 63.17.h,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFFFFF8C7),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Transform.rotate(
+                              angle: pi / 4,
+                              child: Image.asset(
+                                'assets/icons/tap.png',
+                                height: 26.32.h,
+                                width: 23.32.w,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'انقر',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15.sp,
-                              color: const Color(0xFF412B2D),
-                              height: 0.5,
-                              letterSpacing: 0.0,
+                            const SizedBox(
+                              height: 5,
                             ),
-                          ),
-                        ],
+                            Text(
+                              'انقر',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 15.sp,
+                                color: const Color(0xFF412B2D),
+                                height: 0.5,
+                                letterSpacing: 0.0,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -51,11 +51,13 @@ void main() async {
     isInDebugMode: true,
   );
 
+  Workmanager().cancelAll();
+
   // 7. مهمة بدء تشغيل للتأكد من عمل Workmanager
   Workmanager().registerOneOffTask(
-    "init",
-    "initBackgroundTask",
-    initialDelay: Duration(seconds: 3),
+    "khatma_test_task",
+    "khatma_reminder",
+    initialDelay: Duration(seconds: 10),
     constraints: Constraints(
       networkType: NetworkType.connected,
       requiresBatteryNotLow: false,

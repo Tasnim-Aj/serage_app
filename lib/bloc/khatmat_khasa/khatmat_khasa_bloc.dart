@@ -28,11 +28,14 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
 
       final newKhatma = KhatmatKhasaModel.fromMap(response);
 
-      // جدولة الإشعارات للختمة الجديدة
-      await NotificationService.scheduleDailyReminder(
-        khatmaId: newKhatma.id!,
-        creationTime: DateTime.parse(response['created_at']),
-      );
+      debugPrint(
+          '### [KhatmaBloc] جاري جدولة إشعار للختمة الجديدة ID: ${newKhatma.id}');
+
+      // // جدولة إشعارات للختمة الجديدة
+      // await NotificationService.scheduleDailyReminder(
+      //   khatmaId: newKhatma.id!,
+      //   creationTime: DateTime.parse(response['created_at']),
+      // );
 
       emit(KhatmaKhasaLoaded(khatmats: await _fetchKhatmas()));
     } catch (e) {
@@ -49,6 +52,10 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
       final response = await supabase.from('khatmat_khasa').select();
       final khatmas =
           (response as List).map((e) => KhatmatKhasaModel.fromMap(e)).toList();
+
+      // جدولة إشعارات لجميع الختمات
+      await NotificationService.scheduleAllKhatmas();
+
       emit(KhatmaKhasaLoaded(khatmats: khatmas));
     } catch (e) {
       emit(KhatmaKhasaError(
@@ -57,56 +64,18 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
     }
   }
 
-  // Future<void> _reservePart(
-  //     ReservePartEvent event, Emitter<KhatmatKhasaState> emit) async {
-  //   try {
-  //     if (event.khatma.id == null) {
-  //       emit(KhatmaKhasaError(message: 'معرف الختمة غير موجود'));
-  //       return;
-  //     }
-  //
-  //     final response = await supabase
-  //         .from('khatmat_khasa')
-  //         .select()
-  //         .eq('id', event.khatma.id)
-  //         .single();
-  //
-  //     if (response == null) {
-  //       emit(KhatmaKhasaError(message: 'الختمة غير موجودة'));
-  //       return;
-  //     }
-  //
-  //     final currentKhatma = KhatmatKhasaModel.fromMap(response);
-  //
-  //     final updatedParts = List<int>.from(currentKhatma.reserved_parts);
-  //     if (!updatedParts.contains(event.partNumber)) {
-  //       updatedParts.add(event.partNumber);
-  //     }
-  //
-  //     await supabase.from('khatmat_khasa').update({
-  //       'reserved_parts': updatedParts,
-  //     }).eq('id', event.khatma.id);
-  //
-  //     add(LoadKhatmatKhasaEvent());
-  //   } catch (e) {
-  //     emit(KhatmaKhasaError(message: 'فشل حجز الجزء: ${e.toString()}'));
-  //   }
-  // }
-
   Future<void> _reservePart(
     ReservePartEvent event,
     Emitter<KhatmatKhasaState> emit,
   ) async {
-    emit(KhatmaKhasaLoading()); // إظهار حالة التحميل
+    emit(KhatmaKhasaLoading());
 
     try {
-      // 1. التحقق من صحة الختمة
       if (event.khatma.id == null) {
         emit(KhatmaKhasaError(message: 'معرف الختمة غير صالح'));
         return;
       }
 
-      // 2. جلب أحدث بيانات الختمة من Supabase
       final currentData = await supabase
           .from('khatmat_khasa')
           .select('reserved_parts')
@@ -115,26 +84,24 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
 
       final currentParts = List<int>.from(currentData['reserved_parts'] ?? []);
 
-      // 3. التحقق من عدم تكرار الجزء
       if (currentParts.contains(event.partNumber)) {
         emit(KhatmaKhasaError(message: 'هذا الجزء محجوز مسبقاً'));
         return;
       }
 
-      // 4. تحديث البيانات
       final updatedParts = [...currentParts, event.partNumber];
       await supabase
           .from('khatmat_khasa')
           .update({'reserved_parts': updatedParts}).eq('id', event.khatma.id!);
 
-      // 5. التحقق من اكتمال الختمة
       if (updatedParts.length >= 30) {
         await NotificationService.cancelReminder(event.khatma.id!);
-        emit(KhatmaKhasaSuccess(khatmats: []));
+        emit(KhatmaKhasaSuccess(
+          khatmats: await _fetchKhatmas(),
+        ));
+      } else {
+        add(LoadKhatmatKhasaEvent());
       }
-
-      // 6. إعادة تحميل البيانات
-      add(LoadKhatmatKhasaEvent());
     } catch (e) {
       debugPrint('Reserve Part Error: $e');
       emit(KhatmaKhasaError(

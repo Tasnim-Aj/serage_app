@@ -7,7 +7,6 @@ import 'package:serag_app/view/style/gradient_background.dart';
 import 'package:serag_app/view/ui/khatma/khatma_page.dart';
 
 import '../../../bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
-import '../../../service/notification_service.dart';
 import '../../widgets/default_appbar.dart';
 
 class KhatmatKhasaPage extends StatelessWidget {
@@ -165,8 +164,6 @@ class KhatmatKhasaPage extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 8.r, left: 12.r, right: 12.r),
               child: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -276,21 +273,16 @@ class KhatmatKhasaPage extends StatelessWidget {
                                     SnackBar(content: Text(state.message)),
                                   );
                                 }
-                                // if (state is KhatmaKhasaSuccess) {
-                                //   Navigator.pop(context);
-                                //   BlocProvider.of<KhatmatKhasaBloc>(context)
-                                //       .add(LoadKhatmatKhasaEvent());
-                                // }
-
                                 if (state is KhatmaKhasaLoaded) {
                                   Navigator.pop(context);
                                   if (selectedIntention != null) {
-                                    final now = DateTime.now();
-                                    NotificationService.scheduleReminderAfter(
-                                      khatmaName: selectedIntention!,
-                                      creationTime: now,
-                                      duration: Duration(minutes: 1),
-                                    );
+                                    // final now = DateTime.now();
+                                    // NotificationService.scheduleDailyReminder(
+                                    //   // khatmaName: selectedIntention!,
+                                    //   khatmaId: ,
+                                    //   creationTime: now,
+                                    //   // duration: Duration(minutes: 1),
+                                    // );
                                   }
                                 }
                               },

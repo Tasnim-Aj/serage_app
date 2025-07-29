@@ -1,4 +1,8 @@
+// lib/notification/notification_manager.dart
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../service/supabase_service.dart';
 
 class NotificationManager {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -16,16 +20,20 @@ class NotificationManager {
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  static Future<void> showNotification() async {
+  static Future<void> showNotification({
+    required String title,
+    required String body,
+  }) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'your_channel_description',
+      'quran_channel',
+      'تذكير القرآن',
+      channelDescription: 'إشعارات تذكير قراءة القرآن',
       importance: Importance.max,
       priority: Priority.high,
-      showWhen: true,
-      icon: 'mipmap/ic_launcher',
+      playSound: true,
+      enableLights: true,
+      visibility: NotificationVisibility.public,
     );
 
     const NotificationDetails platformChannelSpecifics =
@@ -33,9 +41,25 @@ class NotificationManager {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'تذكير الختمة',
-      'حان وقت قراءة جزء من القرآن اليوم!',
+      title,
+      body,
       platformChannelSpecifics,
     );
+  }
+
+  static Future<bool> checkKhatmaCompletion(int khatmaId) async {
+    try {
+      final response = await SupabaseService.supabase
+          .from('khatmat_khasa')
+          .select('reserved_parts')
+          .eq('id', khatmaId)
+          .single();
+
+      final parts = (response['reserved_parts'] as List).length;
+      return parts >= 30;
+    } catch (e) {
+      debugPrint('Error checking khatma: $e');
+      return false;
+    }
   }
 }

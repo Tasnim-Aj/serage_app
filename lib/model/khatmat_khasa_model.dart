@@ -64,7 +64,7 @@ class KhatmatKhasaModel {
   factory KhatmatKhasaModel.fromMap(Map<String, dynamic> map) {
     return KhatmatKhasaModel(
       // id: map['id'] != null ? map['id'] as int : null,
-      id: map['id'] as int,
+      id: map['id'],
       name: map['name'] as String,
       reserved_parts: map['reserved_parts'] as List,
       createdAt:

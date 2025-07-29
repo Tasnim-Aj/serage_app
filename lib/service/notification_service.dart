@@ -1,48 +1,61 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
+
+import 'supabase_service.dart';
 
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin _plugin =
-      FlutterLocalNotificationsPlugin();
+  static const String _khatmaTask = "daily_khatma_reminder";
 
-  static Future<void> initialize() async {
-    const androidSettings = AndroidInitializationSettings('ic_launcher');
+  static Future<void> scheduleAllKhatmas() async {
+    final khatmas = await SupabaseService.supabase
+        .from('khatmat_khasa')
+        .select('id, created_at, reserved_parts');
 
-    const settings = InitializationSettings(android: androidSettings);
-
-    await _plugin.initialize(settings);
-
-    // tz.initializeTimeZones();
+    for (final khatma in khatmas) {
+      final parts = (khatma['reserved_parts'] as List).length;
+      if (parts < 30) {
+        await scheduleDailyReminder(
+          khatmaId: khatma['id'] as int,
+          creationTime: DateTime.parse(khatma['created_at'] as String),
+        );
+      }
+    }
   }
 
-  static Future<void> scheduleReminderAfter({
-    required String khatmaName,
+  static Future<void> scheduleDailyReminder({
+    required int khatmaId,
     required DateTime creationTime,
-    Duration duration = const Duration(minutes: 1), // الوقت بعد الإنشاء للإشعار
   }) async {
-    // نحول وقت الإنشاء إلى توقيت المنطقة المحلية ثم نضيف مدة الانتظار (دقيقة)
-    final scheduledTime =
-        tz.TZDateTime.from(creationTime, tz.local).add(duration);
+    final now = DateTime.now();
+    final nextTime = _calculateNextTime(creationTime, now);
 
-    await _plugin.zonedSchedule(
-      0,
-      '📖 تذكير بالختمة',
-      'مرت دقيقة على ختمة "$khatmaName"، هل قرأت وردك؟',
-      scheduledTime,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          'reminder_channel',
-          'تذكير الختمة',
-          channelDescription: 'إشعارات خاصة بالختمات بعد دقيقة من الإنشاء',
-          // channelDescription: 'إشعارات خاصة بالختمات بعد 24 ساعة',
-          importance: Importance.max,
-          priority: Priority.high,
-          icon: 'ic_launcher',
-        ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      // uiLocalNotificationDateInterpretation:
-      //     UILocalNotificationDateInterpretation.absoluteTime,
+    await Workmanager().registerPeriodicTask(
+      'khatma_$khatmaId',
+      _khatmaTask,
+      // frequency: const Duration(seconds: 30),
+      // initialDelay: const Duration(seconds: 5),
+      frequency: const Duration(hours: 24),
+      initialDelay: nextTime.difference(now),
+      inputData: {'khatmaId': khatmaId},
     );
+    debugPrint('تم جدولة إشعار اختباري للختمة $khatmaId');
+  }
+
+  static DateTime _calculateNextTime(DateTime creationTime, DateTime now) {
+    var nextTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      creationTime.hour,
+      creationTime.minute,
+    );
+    if (nextTime.isBefore(now)) {
+      nextTime = nextTime.add(const Duration(days: 1));
+    }
+    return nextTime;
+  }
+
+  static Future<void> cancelReminder(int khatmaId) async {
+    await Workmanager().cancelByTag('khatma_$khatmaId');
   }
 }

@@ -21,32 +21,50 @@ import 'view/style/gradient_background.dart';
 void main() async {
   Bloc.observer = MyBlocObserver();
 
+  // 1. تهيئة Flutter الأساسية
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. تحميل الخطوط ومتغيرات البيئة
   await GoogleFonts.pendingFonts([GoogleFonts.inter()]);
   await dotenv.load(fileName: '.env');
 
+  // 3. التحقق من وجود مفاتيح Supabase
   final supabaseUrl = dotenv.env['SUPABASE_URL'];
   final supabaseKey = dotenv.env['SUPABASE_KEY'];
   if (supabaseUrl == null || supabaseKey == null) {
     throw Exception('Supabase URL or Key not found in .env file');
   }
-  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
+
+  // 4. تهيئة Supabase
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: supabaseKey,
+  );
+
+  // 5. تهيئة الإشعارات والمناطق الزمنية
+  await NotificationManager.initializeNotifications();
+  tz.initializeTimeZones();
+
+  // 6. تهيئة Workmanager (يجب أن تكون بعد تهيئة Supabase)
   Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: true,
   );
 
-  Workmanager().registerPeriodicTask(
-    "1",
-    "showNotificationTask",
-    frequency: const Duration(hours: 15),
-    initialDelay: const Duration(seconds: 10),
-    constraints: Constraints(networkType: NetworkType.not_required),
+  // 7. مهمة بدء تشغيل للتأكد من عمل Workmanager
+  Workmanager().registerOneOffTask(
+    "init",
+    "initBackgroundTask",
+    initialDelay: Duration(seconds: 3),
+    constraints: Constraints(
+      networkType: NetworkType.connected,
+      requiresBatteryNotLow: false,
+    ),
+    backoffPolicy: BackoffPolicy.exponential,
+    backoffPolicyDelay: Duration(seconds: 10),
   );
 
-  NotificationManager.showNotification();
-  tz.initializeTimeZones();
-
+  // 8. تشغيل التطبيق
   runApp(const MyApp());
 }
 
@@ -63,24 +81,20 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) => KhatmatKhasaBloc(Supabase.instance.client),
+              create: (context) => KhatmatKhasaBloc(Supabase.instance.client)
+                ..add(LoadKhatmatKhasaEvent()),
             ),
             BlocProvider(
               create: (context) =>
                   KhatmaBloc(Supabase.instance.client)..add(LoadKhatmasEvent()),
             ),
             BlocProvider(
-              create: (context) => KhatmatKhasaBloc(Supabase.instance.client)
-                ..add(LoadKhatmatKhasaEvent()),
+              create: (context) => GelsatDhakrBloc(Supabase.instance.client)
+                ..add(LoadGelsatDhakrEvent()),
             ),
-            BlocProvider(
-                create: (context) => GelsatDhakrBloc(Supabase.instance.client)
-                  ..add(LoadGelsatDhakrEvent()))
-            // BlocProvider(create: (context) => GelsatDhakrBloc(Supabase.instance.client)..add(event))
           ],
           child: BlocProvider(
             create: (context) => ThemeCubit(),
-            // create: (context) => ThemeCubit()..updateThemeBasedOnTime(),
             child: BlocBuilder<ThemeCubit, ThemeData>(
               builder: (context, theme) {
                 return ProviderScope(

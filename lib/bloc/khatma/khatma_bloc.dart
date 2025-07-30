@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -19,6 +21,12 @@ class KhatmaBloc extends Bloc<KhatmaEvent, KhatmaState> {
       AddKhatmaEvent event, Emitter<KhatmaState> emit) async {
     emit(KhatmaLoading());
     try {
+      print("بيانات الإرسال:");
+      print(event.khatma.toMap());
+
+      print('----------------');
+      print(jsonEncode(event.khatma.toMap()));
+
       await supabase.from('khatma').insert(event.khatma.toMap());
 
       emit(KhatmaSuccess(const []));

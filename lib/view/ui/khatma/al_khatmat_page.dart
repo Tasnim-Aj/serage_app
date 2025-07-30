@@ -6,28 +6,39 @@ import 'package:serag_app/view/style/gradient_background.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../bloc/khatma/khatma_bloc.dart';
+import '../../../model/daily_schedule_entry_model.dart';
 import '../../../model/khatma_model.dart';
+import '../../../model/parts_distribution_model.dart';
 import '../../style/app_colors.dart';
 import '../../widgets/default_appbar.dart';
-import 'create_khatma_page.dart';
+import 'khatma_details_page.dart';
 
 class AlKhatmatPage extends StatelessWidget {
-  final int initialPersons;
+  // final List<String> initialParticipants;
+  // final int initialParticipantsNum;
 
-  const AlKhatmatPage({super.key, required this.initialPersons});
+  const AlKhatmatPage({
+    super.key,
+    // required this.initialParticipantsNum,
+    // required this.initialParticipants
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
           KhatmaBloc(Supabase.instance.client)..add(LoadKhatmasEvent()),
-      child: _AlKhatmatView(initialPersons: initialPersons),
+      child: _AlKhatmatView(
+          // initialParticipantsNum: initialParticipantsNum,
+          // initialParticipants: initialParticipants,
+          ),
     );
   }
 }
 
 class _AlKhatmatView extends StatelessWidget {
-  final int initialPersons;
+  final int initialParticipantsNum = 1;
+  final List<String> initialParticipants = ['a'];
   final TextEditingController _personsController = TextEditingController();
   final List<String> _intentions = [
     'قضاء حاجة',
@@ -36,11 +47,6 @@ class _AlKhatmatView extends StatelessWidget {
     'شفاء مريض',
     'تيسير أمر',
   ];
-
-  _AlKhatmatView({required this.initialPersons}) {
-    _personsController.text = initialPersons.toString();
-  }
-
   @override
   Widget build(BuildContext context) {
     final khatmaBloc = BlocProvider.of<KhatmaBloc>(context);
@@ -58,19 +64,25 @@ class _AlKhatmatView extends StatelessWidget {
                 child: BlocConsumer<KhatmaBloc, KhatmaState>(
                   listener: (context, state) {
                     if (state is KhatmaError) {
+                      debugPrint(state.message);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(state.message)),
                       );
                     }
                     if (state is KhatmaSuccess) {
                       khatmaBloc.add(LoadKhatmasEvent());
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GradientBackground(
-                              child: CreateKhatmaPage()),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const GradientBackground(
+                      //         child: CreateKhatmaPage(name: ,)),
+                      //   ),
+                      // );
+
+                      // Navigator.pop(context); // إغلاق الـ BottomSheet أولاً
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   SnackBar(content: Text('تمت إضافة الختمة بنجاح')),
+                      // );
                     }
                   },
                   builder: (context, state) {
@@ -126,6 +138,10 @@ class _AlKhatmatView extends StatelessWidget {
     String? selectedIntention;
     DateTimeRange? selectedDateRange;
     bool isFajri = false;
+    final TextEditingController participantsNumController =
+        TextEditingController();
+    final TextEditingController participantsController =
+        TextEditingController();
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -157,6 +173,7 @@ class _AlKhatmatView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // حقل النية
                             Text(
                               'النية',
                               style: Theme.of(context).textTheme.titleMedium,
@@ -187,6 +204,8 @@ class _AlKhatmatView extends StatelessWidget {
                               },
                             ),
                             SizedBox(height: 27.h),
+
+                            // حقل مدة الختمة
                             Text(
                               'مدة الختمة',
                               style: Theme.of(context).textTheme.titleMedium,
@@ -230,7 +249,7 @@ class _AlKhatmatView extends StatelessWidget {
                                 ),
                                 child: Text(
                                   selectedDateRange == null
-                                      ? ''
+                                      ? 'اختر تاريخ البدء والانتهاء'
                                       : _formatDateRange(selectedDateRange!),
                                   style:
                                       Theme.of(context).textTheme.titleMedium,
@@ -238,6 +257,8 @@ class _AlKhatmatView extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 20.h),
+
+                            // خيار الفجرية
                             Row(
                               children: [
                                 Checkbox(
@@ -262,64 +283,124 @@ class _AlKhatmatView extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 20.h),
-                            Center(
-                              child: InkWell(
-                                onTap: () {
-                                  // مشاركة الختمة
-                                },
-                                child: Container(
-                                  width: 123.w,
-                                  height: 29.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: const Color(0xFF7D6358),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image.asset('assets/icons/sparkling.png'),
-                                      Text(
-                                        'مشاركة',
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15.sp,
-                                          color: Colors.white,
-                                          letterSpacing: 0.0,
-                                          height: 1.0,
-                                        ),
-                                      ),
-                                      const Icon(Icons.share,
-                                          color: Colors.white),
-                                    ],
-                                  ),
+
+                            // حقل عدد المشاركين
+                            Text(
+                              'عدد المشاركين',
+                              style: GoogleFonts.inter(
+                                fontSize: 23.sp,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0,
+                                height: 1.0,
+                                color: DawnColors.textColor3,
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
+                            TextField(
+                              controller: participantsNumController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
                             ),
+                            // حقل أسماء المشاركين
+                            Text(
+                              'أسماء المشاركين',
+                              style: GoogleFonts.inter(
+                                fontSize: 23.sp,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: 0,
+                                height: 1.0,
+                                color: DawnColors.textColor3,
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
+                            TextField(
+                              controller: participantsController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
+
+                            // زر الإضافة
                             InkWell(
                               onTap: () {
                                 if (selectedIntention == null ||
-                                    selectedDateRange == null) {
+                                    selectedDateRange == null ||
+                                    participantsNumController.text.isEmpty ||
+                                    participantsController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                        content:
-                                            Text('الرجاء اختيار النية والمدة')),
+                                      content: Text(
+                                          'الرجاء إدخال جميع البيانات المطلوبة'),
+                                    ),
                                   );
                                   return;
                                 }
 
-                                bloc.add(AddKhatmaEvent(
-                                  KhatmaModel(
-                                    name: selectedIntention!,
-                                    start_date:
-                                        selectedDateRange!.start.toString(),
-                                    end_date: selectedDateRange!.end.toString(),
-                                    total_persons:
-                                        int.tryParse(_personsController.text) ??
-                                            1,
-                                    is_fajri: isFajri,
-                                  ),
-                                ));
+                                final participantsCount = int.tryParse(
+                                    participantsNumController.text);
+                                if (participantsCount == null ||
+                                    participantsCount < 1) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('الرجاء إدخال عدد مشاركين صحيح'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                final participants = participantsController.text
+                                    .split('/')
+                                    .map((name) => name.trim())
+                                    .where((name) => name.isNotEmpty)
+                                    .toList();
+
+                                final distribution = distributeParts(
+                                  startDate: selectedDateRange!.start,
+                                  endDate: selectedDateRange!.end,
+                                  participants: participantsController.text
+                                      .split('/')
+                                      .map((e) => e.trim())
+                                      .where((e) => e.isNotEmpty)
+                                      .toList(),
+                                );
+
+                                final khatma = KhatmaModel(
+                                  id: 1,
+                                  name: selectedIntention!,
+                                  start_date: selectedDateRange!.start
+                                      .toIso8601String(),
+                                  end_date:
+                                      selectedDateRange!.end.toIso8601String(),
+                                  total_persons: participantsCount,
+                                  participants: participants,
+                                  is_fajri: isFajri,
+                                  parts_distribution:
+                                      (distribution['parts_distribution']
+                                              as List)
+                                          .map((e) =>
+                                              PartDistributionEntry.fromMap(e))
+                                          .toList(),
+                                  daily_schedule: (distribution[
+                                          'daily_schedule'] as List)
+                                      .map((e) => DailyScheduleEntry.fromMap(e))
+                                      .toList(),
+                                );
+
+                                bloc.add(AddKhatmaEvent(khatma));
+
+                                Navigator.pop(
+                                    context); // إغلاق البوتوم شيت بعد الإضافة
                               },
                               child: Container(
                                 margin: EdgeInsets.only(top: 32.r),
@@ -353,104 +434,117 @@ class _AlKhatmatView extends StatelessWidget {
   }
 
   Widget _buildKhatmaItem(BuildContext context, KhatmaModel khatma, int index) {
-    return Container(
-      margin: EdgeInsets.only(left: 25.r, right: 25.r, bottom: 24.r),
-      width: 309.w,
-      height: 195.h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).primaryColor,
-      ),
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 8.r, left: 12.r, right: 5.r),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  height: 90.62.h,
-                  width: 89.82.w,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(
-                      'assets/icons/star5.png',
-                    )),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => GradientBackground(
+                child: KhatmaDetailsPage(
+              khatma: khatma,
+            )),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(left: 25.r, right: 25.r, bottom: 24.r),
+        width: 309.w,
+        height: 195.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).primaryColor,
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 8.r, left: 12.r, right: 5.r),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    height: 90.62.h,
+                    width: 89.82.w,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                        'assets/icons/star5.png',
+                      )),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'ختمة',
+                          style: GoogleFonts.inter(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            height: 1.0,
+                            letterSpacing: 0.0,
+                          ),
+                        ),
+                        Text(
+                          '${index + 1}',
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            height: 1.0,
+                            letterSpacing: 0.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Text(
+                    khatma.name,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 4.18.r),
+              width: 279.w,
+              height: 1.h,
+              color: Theme.of(context).cardColor,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15.r, right: 15.r, top: 8.r),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
                     children: [
+                      Text('تاريخ البدء',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      SizedBox(height: 9.r),
                       Text(
-                        'ختمة',
-                        style: GoogleFonts.inter(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                          height: 1.0,
-                          letterSpacing: 0.0,
-                        ),
-                      ),
-                      Text(
-                        '${index + 1}',
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                          height: 1.0,
-                          letterSpacing: 0.0,
-                        ),
+                        _formatDate(khatma.start_date),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
-                ),
-                Text(
-                  khatma.name,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ],
+                  Image.asset(
+                    'assets/icons/floral.png',
+                    width: 51.w,
+                    height: 28.h,
+                  ),
+                  Column(
+                    children: [
+                      Text('تاريخ الانتهاء',
+                          style: Theme.of(context).textTheme.bodyMedium),
+                      SizedBox(height: 9.r),
+                      Text(_formatDate(khatma.end_date),
+                          style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 4.18.r),
-            width: 279.w,
-            height: 1.h,
-            color: Theme.of(context).cardColor,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15.r, right: 15.r, top: 8.r),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Text('تاريخ البدء',
-                        style: Theme.of(context).textTheme.bodyMedium),
-                    SizedBox(height: 9.r),
-                    Text(
-                      _formatDate(khatma.start_date),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-                Image.asset(
-                  'assets/icons/floral.png',
-                  width: 51.w,
-                  height: 28.h,
-                ),
-                Column(
-                  children: [
-                    Text('تاريخ الانتهاء',
-                        style: Theme.of(context).textTheme.bodyMedium),
-                    SizedBox(height: 9.r),
-                    Text(_formatDate(khatma.end_date),
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -463,4 +557,52 @@ class _AlKhatmatView extends StatelessWidget {
       return dateString;
     }
   }
+}
+
+Map<String, dynamic> distributeParts({
+  required DateTime startDate,
+  required DateTime endDate,
+  required List<String> participants,
+}) {
+  const totalParts = 30;
+  final dayCount = endDate.difference(startDate).inDays + 1;
+  final List<Map<String, dynamic>> partsDistribution = [];
+  final Map<String, List<Map<String, dynamic>>> dayMap = {};
+
+  for (int i = 0; i < totalParts; i++) {
+    final partNumber = i + 1;
+    final personIndex = i % participants.length;
+    final dayOffset = i % dayCount;
+    final assignedDate = startDate.add(Duration(days: dayOffset));
+    final dateKey =
+        "${assignedDate.year}-${assignedDate.month.toString().padLeft(2, '0')}-${assignedDate.day.toString().padLeft(2, '0')}";
+
+    final partEntry = {
+      'part': partNumber,
+      'person': participants[personIndex],
+      'date': dateKey,
+    };
+
+    partsDistribution.add(partEntry);
+
+    if (!dayMap.containsKey(dateKey)) {
+      dayMap[dateKey] = [];
+    }
+    dayMap[dateKey]!.add({
+      'part': partNumber,
+      'person': participants[personIndex],
+    });
+  }
+
+  final dailySchedule = dayMap.entries
+      .map((entry) => {
+            'date': entry.key,
+            'parts': entry.value,
+          })
+      .toList();
+
+  return {
+    'parts_distribution': partsDistribution,
+    'daily_schedule': dailySchedule,
+  };
 }

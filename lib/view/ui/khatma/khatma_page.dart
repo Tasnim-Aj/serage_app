@@ -183,7 +183,6 @@ class _KhatmaView extends StatelessWidget {
                 builder: (context, state) {
                   if (state is KhatmaKhasaLoaded ||
                       state is KhatmaKhasaSuccess) {
-                    // لما الحالة تكون Loaded أو Success، نجيب الـ khatma المحدّث من الـ state لو موجود
                     final khatmats = (state is KhatmaKhasaLoaded)
                         ? state.khatmats
                         : (state as KhatmaKhasaSuccess).khatmats;

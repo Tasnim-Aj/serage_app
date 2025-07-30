@@ -114,8 +114,8 @@ class KhatmaDetailsPage extends StatelessWidget {
                           final parts = day.parts;
 
                           return Container(
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            padding: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
@@ -135,40 +135,6 @@ class KhatmaDetailsPage extends StatelessWidget {
                                           color:
                                               Theme.of(context).primaryColor),
                                     ),
-                                    // IconButton(
-                                    //   icon: Icon(Icons.share,
-                                    //       color:
-                                    //           Theme.of(context).primaryColor),
-                                    //   onPressed: () async {
-                                    //     final buffer = StringBuffer();
-                                    //     buffer
-                                    //         .writeln('📖 ختمة: ${khatma.name}');
-                                    //     buffer.writeln('📅 التاريخ: $date\n');
-                                    //
-                                    //     for (var part in parts) {
-                                    //       buffer.writeln(
-                                    //           'الجزء ${part.part}: ${part.person}');
-                                    //     }
-                                    //
-                                    //     final message = buffer.toString();
-                                    //     final whatsappUrl = Uri.parse(
-                                    //         "https://wa.me/?text=${Uri.encodeComponent(message)}");
-                                    //
-                                    //     if (await canLaunchUrl(whatsappUrl)) {
-                                    //       await launchUrl(whatsappUrl,
-                                    //           mode: LaunchMode
-                                    //               .externalApplication);
-                                    //     } else {
-                                    //       ScaffoldMessenger.of(context)
-                                    //           .showSnackBar(
-                                    //         SnackBar(
-                                    //             content:
-                                    //                 Text('لا يمكن فتح واتساب')),
-                                    //       );
-                                    //     }
-                                    //   },
-                                    // ),
-
                                     IconButton(
                                       icon: Icon(Icons.share,
                                           color:
@@ -176,24 +142,20 @@ class KhatmaDetailsPage extends StatelessWidget {
                                       onPressed: () {
                                         final message = buildMessageForDay(
                                             khatmaUpdated, day);
-
-                                        // هنا ترسل الرسالة عبر أي تطبيق (واتساب، مسجات، ...)
-
-                                        // مثال باستخدام مكتبة share_plus
                                         Share.share(message);
                                       },
                                     ),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 GridView.builder(
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemCount: parts.length,
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 5,
                                     mainAxisSpacing: 10,
                                     crossAxisSpacing: 10,
@@ -217,7 +179,7 @@ class KhatmaDetailsPage extends StatelessWidget {
                                     );
                                   },
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                               ],
                             ),
                           );

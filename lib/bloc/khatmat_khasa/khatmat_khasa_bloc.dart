@@ -31,11 +31,12 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
       debugPrint(
           '### [KhatmaBloc] جاري جدولة إشعار للختمة الجديدة ID: ${newKhatma.id}');
 
-      // // جدولة إشعارات للختمة الجديدة
-      // await NotificationService.scheduleDailyReminder(
-      //   khatmaId: newKhatma.id!,
-      //   creationTime: DateTime.parse(response['created_at']),
-      // );
+      await NotificationService.scheduleKhatmaNotification(
+        khatmaId: newKhatma.id!,
+        creationTime: DateTime.parse(response['created_at']).toLocal(),
+        // creationTime: DateTime.now().toUtc(),
+        khatmaName: newKhatma.name,
+      );
 
       emit(KhatmaKhasaLoaded(khatmats: await _fetchKhatmas()));
     } catch (e) {
@@ -53,8 +54,8 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
       final khatmas =
           (response as List).map((e) => KhatmatKhasaModel.fromMap(e)).toList();
 
-      // جدولة إشعارات لجميع الختمات
-      await NotificationService.scheduleAllKhatmas();
+      // جدولة إشعارات لجميع الختمات غير المكتملة
+      // await NotificationService.scheduleNotificationsForAllKhatmas();
 
       emit(KhatmaKhasaLoaded(khatmats: khatmas));
     } catch (e) {
@@ -95,6 +96,7 @@ class KhatmatKhasaBloc extends Bloc<KhatmatKhasaEvent, KhatmatKhasaState> {
           .update({'reserved_parts': updatedParts}).eq('id', event.khatma.id!);
 
       if (updatedParts.length >= 30) {
+        // الغاء الإشعار عند اكتمال الحجز
         await NotificationService.cancelReminder(event.khatma.id!);
         emit(KhatmaKhasaSuccess(
           khatmats: await _fetchKhatmas(),

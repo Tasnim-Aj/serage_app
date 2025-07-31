@@ -1,60 +1,34 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
-
-import '../service/notification_service.dart';
-import 'notification_manager.dart';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await dotenv.load();
+    final FlutterLocalNotificationsPlugin notificationsPlugin =
+        FlutterLocalNotificationsPlugin();
 
-    debugPrint('### [CallbackDispatcher] بدء تنفيذ المهمة: $task');
-    debugPrint('### بيانات الإدخال: ${inputData?.toString()}');
+    const androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings = InitializationSettings(android: androidSettings);
+    await notificationsPlugin.initialize(initSettings);
 
-    try {
-      if (task == 'khatma_reminder') {
-        // استخراج البيانات
-        final khatmaId = inputData?['khatmaId'] as int?;
-        final khatmaName = inputData?['khatmaName'] as String?;
-        final creationTimeStr = inputData?['creationTime'] as String?;
+    // هذه أهم نقطة: لا تتجاهلها
+    final androidDetails = AndroidNotificationDetails(
+      'khatma_channel',
+      'ختمات',
+      channelDescription: 'قناة تذكير الختمات',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
 
-        if (khatmaId == null) {
-          debugPrint('### خطأ: khatmaId غير موجود');
-          return false;
-        }
+    final notificationDetails = NotificationDetails(android: androidDetails);
 
-        // تهيئة Supabase
-        await Supabase.initialize(
-          url: dotenv.env['SUPABASE_URL']!,
-          anonKey: dotenv.env['SUPABASE_KEY']!,
-        );
+    await notificationsPlugin.show(
+      inputData?['khatmaId'] ?? 0,
+      'تذكير ختمة',
+      'حان وقت قراءة جزء من ختمة: ${inputData?['khatmaName'] ?? ''}',
+      notificationDetails,
+    );
 
-        // إعادة الجدولة للمهمة اليومية
-        if (creationTimeStr != null) {
-          final creationTime = DateTime.parse(creationTimeStr);
-          await NotificationService.scheduleKhatmaNotification(
-            khatmaId: khatmaId,
-            creationTime: creationTime,
-            khatmaName: khatmaName ?? 'ختمة القرآن',
-          );
-        }
-
-        // عرض الإشعار
-        await NotificationManager.showNotification(
-          title: 'تذكير ختمة القرآن',
-          body: 'حان وقت قراءة جزء من ختمة "${khatmaName ?? ''}"',
-        );
-
-        return true;
-      }
-      return false;
-    } catch (e, stack) {
-      debugPrint('### [CallbackDispatcher] خطأ جسيم: $e');
-      debugPrint('### StackTrace: $stack');
-      return false;
-    }
+    return Future.value(true);
   });
 }

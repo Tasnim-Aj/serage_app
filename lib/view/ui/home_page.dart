@@ -6,6 +6,7 @@ import 'package:serag_app/view/ui/dhaker/mspah_page.dart';
 import 'package:serag_app/view/widgets/default_appbar.dart';
 
 import '../../cubit/theme_cubit.dart';
+import '../../service/notification_service.dart';
 import '../style/gradient_background.dart';
 import 'khatma/al_khatmat_page.dart';
 import 'khatma/khatmat_khasa_page.dart';
@@ -169,13 +170,19 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        // onPressed: () {
+        //   // اختبار وضع الفجر المزيف
+        //   // context.read<ThemeCubit>().updateThemeBasedOnTime(simulateTest: true);
+        //   context.read<ThemeCubit>().updateThemeBasedOnTime();
+        // },
+        // child: const Icon(Icons.access_time),
+
         onPressed: () {
-          // اختبار وضع الفجر المزيف
-          // context.read<ThemeCubit>().updateThemeBasedOnTime(simulateTest: true);
-          context.read<ThemeCubit>().updateThemeBasedOnTime();
+          NotificationService.showTestNotification();
         },
-        child: const Icon(Icons.access_time),
+        child: Text('إظهار إشعار تجريبي'),
       ),
+
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () => context.read<ThemeCubit>().toggleTheme(),
       //   child: Icon(

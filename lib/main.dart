@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,13 +10,12 @@ import 'package:serag_app/bloc/khatma/khatma_bloc.dart';
 import 'package:serag_app/cubit/theme_cubit.dart';
 import 'package:serag_app/view/ui/home_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:workmanager/workmanager.dart';
 
 import 'bloc/khatmat_khasa/khatmat_khasa_bloc.dart';
 import 'config/config.dart';
 import 'notification/callback_dispatcher.dart';
-import 'notification/notification_manager.dart';
+import 'service/notification_service.dart';
 import 'view/style/gradient_background.dart';
 
 void main() async {
@@ -35,24 +35,41 @@ void main() async {
     throw Exception('Supabase URL or Key not found in .env file');
   }
 
-  // 4. تهيئة Supabase
+  // // 4. تهيئة Supabase
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseKey,
   );
 
-  // 5. تهيئة الإشعارات والمناطق الزمنية
-  await NotificationManager.initializeNotifications();
-  tz.initializeTimeZones();
-
-  // 6. تهيئة Workmanager (يجب أن تكون بعد تهيئة Supabase)
+  // تهيئة Workmanager
   Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: true,
   );
 
-  Workmanager().cancelAll();
+  // تهيئة flutter_local_notifications (اختياري، ممكن يكون في NotificationService)
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const initSettings = InitializationSettings(android: androidSettings);
+  await flutterLocalNotificationsPlugin.initialize(initSettings);
 
+  // await NotificationService.scheduleNotificationsForAllKhatmas();
+  //
+  // // 5. تهيئة الإشعارات والمناطق الزمنية
+  // await NotificationManager.initializeNotifications();
+  // tz.initializeTimeZones();
+  // tz.initializeTimeZones();
+  // tz.setLocalLocation(tz.getLocation('Asia/Damascus'));
+
+  //
+  // // 6. تهيئة Workmanager (يجب أن تكون بعد تهيئة Supabase)
+  // Workmanager().initialize(
+  //   callbackDispatcher,
+  //   isInDebugMode: true,
+  // );
+  //
+  // // Workmanager().cancelAll();
+  // //
   // 7. مهمة بدء تشغيل للتأكد من عمل Workmanager
   Workmanager().registerOneOffTask(
     "khatma_test_task",
@@ -65,6 +82,9 @@ void main() async {
     backoffPolicy: BackoffPolicy.exponential,
     backoffPolicyDelay: Duration(seconds: 10),
   );
+
+  await NotificationService.init();
+  await NotificationService.showTestNotification();
 
   // 8. تشغيل التطبيق
   runApp(const MyApp());

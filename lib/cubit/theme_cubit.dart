@@ -48,28 +48,32 @@ class ThemeCubit extends Cubit<ThemeData> {
       if (response.statusCode == 200) {
         final data = response.data;
         final fajrString = data['data']['timings']['Fajr'] as String;
+        print('وقت الفجر المستلم من API: $fajrString'); // أضف هذا السطر
 
         final parts = fajrString.split(":");
         final fajrHour = int.parse(parts[0]);
         final fajrMinute = int.parse(parts[1]);
 
+        print('وقت الفجر المحلل: $fajrHour:$fajrMinute'); // أضف هذا السطر
+
         final fajrTime =
             DateTime(now.year, now.month, now.day, fajrHour, fajrMinute);
-
-        // final fajrTime =
-        //     DateTime(now.year, now.month, now.day, 4, 30); // مثال: 5:30 صباحًا
         final fajrEnd = fajrTime.add(const Duration(hours: 1, minutes: 30));
 
-        // 3. الآن يمكن استخدام now و fajrTime بعد تعريفهما
+        print('نطاق الفجر: من $fajrTime إلى $fajrEnd'); // أضف هذا السطر
+        print('الوقت الحالي: $now'); // أضف هذا السطر
+
         if (now.isAfter(fajrTime) && now.isBefore(fajrEnd)) {
-          emit(AppThemes.darkTheme);
-          print('تم تفعيل الثيم المظلم تلقائيًا (وقت الفجر)');
+          if (state != AppThemes.darkTheme) {
+            emit(AppThemes.darkTheme);
+            print('✅ تم تفعيل الثيم المظلم (وقت الفجر)');
+          }
         } else {
-          emit(AppThemes.lightTheme);
-          print('تم تفعيل الثيم الفاتح  تلقائيًا (خارج وقت الفجر)');
+          if (state != AppThemes.lightTheme) {
+            emit(AppThemes.lightTheme);
+            print('☀️ تم تفعيل الثيم الفاتح (خارج وقت الفجر)');
+          }
         }
-      } else {
-        print('فشل في جلب وقت الفجر من API');
       }
     } catch (e) {
       print('⚠️ خطأ في تحديث الثيم: $e');

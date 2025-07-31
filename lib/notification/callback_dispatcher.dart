@@ -11,8 +11,7 @@ void callbackDispatcher() {
     const initSettings = InitializationSettings(android: androidSettings);
     await notificationsPlugin.initialize(initSettings);
 
-    // هذه أهم نقطة: لا تتجاهلها
-    final androidDetails = AndroidNotificationDetails(
+    const androidDetails = AndroidNotificationDetails(
       'khatma_channel',
       'ختمات',
       channelDescription: 'قناة تذكير الختمات',
@@ -20,7 +19,8 @@ void callbackDispatcher() {
       priority: Priority.high,
     );
 
-    final notificationDetails = NotificationDetails(android: androidDetails);
+    final notificationDetails =
+        const NotificationDetails(android: androidDetails);
 
     await notificationsPlugin.show(
       inputData?['khatmaId'] ?? 0,

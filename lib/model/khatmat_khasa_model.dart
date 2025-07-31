@@ -31,12 +31,7 @@ class KhatmatKhasaModel {
 
   @override
   String toString() {
-    return 'KhatmatKhasaModel{' +
-        ' id: $id,' +
-        ' name: $name,' +
-        ' reserved_parts: $reserved_parts,' +
-        ' created_at: $createdAt,' +
-        '}';
+    return 'KhatmatKhasaModel{ id: $id, name: $name, reserved_parts: $reserved_parts, created_at: $createdAt,}';
   }
 
   KhatmatKhasaModel copyWith({

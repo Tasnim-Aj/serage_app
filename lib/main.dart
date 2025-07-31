@@ -74,13 +74,13 @@ void main() async {
   Workmanager().registerOneOffTask(
     "khatma_test_task",
     "khatma_reminder",
-    initialDelay: Duration(seconds: 10),
+    initialDelay: const Duration(seconds: 10),
     constraints: Constraints(
       networkType: NetworkType.connected,
       requiresBatteryNotLow: false,
     ),
     backoffPolicy: BackoffPolicy.exponential,
-    backoffPolicyDelay: Duration(seconds: 10),
+    backoffPolicyDelay: const Duration(seconds: 10),
   );
 
   await NotificationService.init();

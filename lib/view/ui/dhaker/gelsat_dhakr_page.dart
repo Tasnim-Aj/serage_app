@@ -493,7 +493,6 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                   onChanged: (double newValue) {
                                     setModalState(() {
                                       sliderValue = newValue.round();
-                                      print('New Value: $sliderValue');
                                     });
                                   },
                                 );
@@ -515,7 +514,8 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.remove, color: Colors.white),
+                                  icon: const Icon(Icons.remove,
+                                      color: Colors.white),
                                   onPressed: () {
                                     if (_participantsCount > 1) {
                                       setModalState(() => _participantsCount--);
@@ -537,7 +537,8 @@ class _GelsatDhakrPageState extends State<GelsatDhakrPage> {
                                   ),
                                 ),
                                 IconButton(
-                                  icon: Icon(Icons.add, color: Colors.white),
+                                  icon: const Icon(Icons.add,
+                                      color: Colors.white),
                                   onPressed: () {
                                     setModalState(() => _participantsCount++);
                                   },

@@ -25,11 +25,7 @@ class MspahModel {
 
   @override
   String toString() {
-    return 'MspahModel{' +
-        ' name: $name,' +
-        ' required_number: $required_number,' +
-        ' counter: $counter,' +
-        '}';
+    return 'MspahModel{ name: $name, required_number: $required_number, counter: $counter,}';
   }
 
   MspahModel copyWith({
@@ -46,9 +42,9 @@ class MspahModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': this.name,
-      'required_number': this.required_number,
-      'counter': this.counter,
+      'name': name,
+      'required_number': required_number,
+      'counter': counter,
     };
   }
 

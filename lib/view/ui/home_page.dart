@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                       _buildMainButton('ختمة عامة', 'assets/icons/group41.png',
                           () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => GradientBackground(
+                            builder: (context) => const GradientBackground(
                                 child: AlKhatmatPage(
                                     // initialParticipantsNum: 1,
                                     // initialParticipants: ["مشارك افتراضي"],
@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           NotificationService.showTestNotification();
         },
-        child: Text('إظهار إشعار تجريبي'),
+        child: const Text('إظهار إشعار تجريبي'),
       ),
 
       // floatingActionButton: FloatingActionButton(

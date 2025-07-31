@@ -53,16 +53,7 @@ class KhatmaModel {
 
   @override
   String toString() {
-    return 'KhatmaModel{' +
-        ' name: $name,' +
-        ' start_date: $start_date,' +
-        ' end_date: $end_date,' +
-        ' total_persons: $total_persons,' +
-        ' participants: $participants,' +
-        ' is_fajri: $is_fajri,' +
-        ' parts_distribution: $parts_distribution,' +
-        ' daily_schedule: $daily_schedule,' +
-        '}';
+    return 'KhatmaModel{ name: $name, start_date: $start_date, end_date: $end_date, total_persons: $total_persons, participants: $participants, is_fajri: $is_fajri, parts_distribution: $parts_distribution, daily_schedule: $daily_schedule,}';
   }
 
   KhatmaModel copyWith({
